@@ -152,11 +152,37 @@ input[type=range]{width:100%;accent-color:var(--green)}
 .rot{display:inline-grid;color:var(--green)}.rot span{grid-area:1/1;animation:rotw 10s infinite;opacity:0}.rot span:nth-child(1){animation-delay:0s}.rot span:nth-child(2){animation-delay:2s}.rot span:nth-child(3){animation-delay:4s}.rot span:nth-child(4){animation-delay:6s}.rot span:nth-child(5){animation-delay:8s}
 @keyframes rotw{0%{opacity:0;transform:translateY(8px)}4%,18%{opacity:1;transform:none}22%,100%{opacity:0;transform:translateY(-8px)}}
 @media (prefers-reduced-motion:reduce){.greet.wl .bub,.rot span,.greet.wl .kd,.greet.wl .dt{animation:none!important;opacity:1;stroke-dashoffset:0;transform:none}.rot span:not(:first-child){display:none}}
+
+/* desktop layout */
+@media (min-width:900px){
+ body:not(.phone-mode) #stage{padding:0;display:block}
+ body:not(.phone-mode) #phone{width:100%;max-width:none;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}
+ body:not(.phone-mode) .screen{padding:36px 48px 0;animation:none}
+ body:not(.phone-mode) .screen>*{width:100%;max-width:520px;margin-left:auto;margin-right:auto}
+ body:not(.phone-mode) #phone.withnav .screen{padding-left:268px}
+ body:not(.phone-mode) #phone.withnav .screen>*{max-width:820px}
+ body:not(.phone-mode) .bnav{position:fixed;left:0;top:0;bottom:0;width:220px;height:auto;flex-direction:column;align-items:stretch;border-top:none;border-right:1px solid var(--line);padding:96px 12px 24px;margin:0;gap:4px;max-width:none;background:#fff}
+ body:not(.phone-mode) .bnav::before{content:"kodu";position:absolute;top:30px;left:24px;font-family:Sora,sans-serif;font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink)}
+ body:not(.phone-mode) .bnav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;height:48px;padding:0 14px;border-radius:14px;font-size:15px;color:var(--muted)}
+ body:not(.phone-mode) .bnav button.on{background:var(--mint);color:var(--ink)}
+ body:not(.phone-mode) .pil{width:auto;height:auto;background:none!important}
+ body:not(.phone-mode) .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ body:not(.phone-mode) .grid3{display:grid;grid-template-columns:repeat(3,1fr)!important;gap:12px}
+ body:not(.phone-mode) .cta{margin:auto auto 0;border-radius:20px 20px 0 0;padding-bottom:16px}
+ body:not(.phone-mode) .sheetbg{position:fixed}
+ body:not(.phone-mode) .sheet{position:fixed;left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:560px;max-height:86vh;border-radius:28px}
+ body:not(.phone-mode) .toast{left:50%;right:auto;transform:translateX(-50%);min-width:360px;top:24px}
+ body:not(.phone-mode) .rolesw{top:16px}
+ body:not(.phone-mode) .hscroll{margin:0;padding:2px 0 6px}
+ body:not(.phone-mode) .greet{height:300px!important}
+ body:not(.phone-mode) .bub2{max-width:70%}
+ body:not(.phone-mode) h2{font-size:30px}
+}
 </style>
 </head>
 <body>
 <div id="stage"><div id="phone" role="application" aria-label="Kodu prototype"><div id="rolesw" class="rolesw"><button data-switch="expat">Expat</button><button data-switch="provider">Provider</button></div></div></div>
-<div class="devbar"><span>Prototype</span><button data-dev="reset">Reset all</button><button data-switch="expat">Expat view</button><button data-switch="provider">Provider view</button></div>
+<div class="devbar"><span>Prototype</span><button data-dev="reset">Reset all</button><button data-dev="phone">Phone frame</button><button data-switch="expat">Expat view</button><button data-switch="provider">Provider view</button></div>
 <script>
 const I = {
   back:'<path d="M15 5l-7 7 7 7"/>',check:'<path d="M5 12l5 5 9-10"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
@@ -283,7 +309,7 @@ edone:()=>`<div style="margin:auto 0" class="col center"><div style="width:120px
 function render(){
   const ph=document.getElementById("phone");
   const old=ph.querySelector(".screen");const top=old?old.scrollTop:0;if(old)old.remove();ph.insertAdjacentHTML("beforeend",`<div class="screen ${anim?(dir==="back"?"back":"fwd"):"still"}" id="scr">${SCREENS[route]()}</div>`);if(!anim)ph.querySelector(".screen").scrollTop=top;anim=false;
-  document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
+  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
   const first=ph.querySelector(".in.err input, .otp input");if(first&&route==="otp")first.focus();
   if(route==="otp")countdown();
 }
@@ -314,6 +340,7 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("[data-switch],[data-go],[data-role],[data-act],[data-chip],[data-lang],[data-lvl],[data-tog],[data-doc],[data-dev]");if(!t)return;
   const form=t.closest("form");if(form)readForm(form);
   if(t.dataset.switch){switchRole(t.dataset.switch);return}
+  if(t.dataset.dev==="phone"){document.body.classList.toggle("phone-mode");t.textContent=document.body.classList.contains("phone-mode")?"Desktop layout":"Phone frame";fit();return}
   if(t.dataset.dev){if(t.dataset.dev==="reset"){try{localStorage.removeItem("kodu.proto.expat");localStorage.removeItem("kodu.proto.provider")}catch(e){}S=blank();save();history=[];go("welcome")}return}
   if(t.dataset.role){S.role=t.dataset.role;save();if(route==="welcome"){go("account")}else render();return}
   if(t.dataset.go){if(t.dataset.go==="back")goBack();else go(t.dataset.go);return}
@@ -348,7 +375,7 @@ document.addEventListener("input",e=>{
 });
 document.addEventListener("keydown",e=>{const i=e.target;if(i.closest&&i.closest("[data-otp]")&&e.key==="Backspace"&&!i.value&&i.previousElementSibling)i.previousElementSibling.focus()});
 document.addEventListener("paste",e=>{const i=e.target;if(i.closest&&i.closest("[data-otp]")){const d=(e.clipboardData.getData("text")||"").replace(/\D/g,"").slice(0,6);if(d.length){e.preventDefault();[...i.parentElement.children].forEach((x,n)=>{x.value=d[n]||"";x.classList.toggle("filled",!!x.value)})}}});
-function fit(){const ph=document.getElementById("phone");if(innerWidth<=430){ph.style.zoom="";return}const z=Math.min(1,(innerHeight-56)/844,(innerWidth-56)/390);ph.style.zoom=z<1?z:""}addEventListener("resize",fit);fit();
+function fit(){const ph=document.getElementById("phone");if(innerWidth<=430||(innerWidth>=900&&!document.body.classList.contains("phone-mode"))){ph.style.zoom="";return}const z=Math.min(1,(innerHeight-56)/844,(innerWidth-56)/390);ph.style.zoom=z<1?z:""}addEventListener("resize",fit);fit();
 render();
 </script>
 <script>
@@ -419,12 +446,12 @@ ehome:()=>{ensure();const open=S.jobs2.find(j=>j.status!=="done"&&j.status!=="ca
  const mini=p=>`<button class="mini" data-open="${p.id}">${av(p,44)}<b>${p.name.split(" ")[0]}</b><span class="muted" style="font-size:12px">${p.trade}</span><span class="row" style="gap:4px;font-size:12px"><span style="color:#F2C14E">★</span><b>${p.rating.toFixed(1)}</b><span class="muted">·</span><span>€${p.pricing==="job"?p.jobPrice:p.rate}${p.pricing==="job"?"":"/h"}</span></span></button>`;
  return `${topbar()}<div class="col" style="gap:4px"><h2>${({ES:"Hola",EN:"Hello",ET:"Tere",RU:"Привет",UK:"Привіт",DE:"Hallo",FI:"Hei",PT:"Olá",FR:"Salut",IT:"Ciao"})[myLang()]||"Hello"} ${esc(first())}</h2><p class="sub row" style="gap:6px">${ico("pin","#56605C",16)}${esc(dist.trim())}, ${S.f.city}  ·  ${inCity.length} verified providers</p></div>
 ${sbar("",activeFilters())}
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${CATS.map(([c,i,bg])=>`<button class="cat" style="background:${bg}" data-cat="${c}">${ico(i,"#16201D",24)}<b>${c}</b></button>`).join("")}</div>
+<div class="grid3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${CATS.map(([c,i,bg])=>`<button class="cat" style="background:${bg}" data-cat="${c}">${ico(i,"#16201D",24)}<b>${c}</b></button>`).join("")}</div>
 ${open?`<button class="jobcard" data-job="${open.id}"><span class="row between"><span style="font-size:13px;font-weight:700;color:var(--mint)">Open job</span>${pill(open.status)}</span><b style="font-family:Sora,sans-serif;font-size:18px;display:block;margin-top:6px">${esc(open.title)}</b><span style="font-size:13px;color:rgba(255,255,255,.7)">${find(open.pid).name}  ·  ${open.day} ${open.slot}${open.status!=="requested"?"  ·  "+money(quote(open).total):""}</span></button>`:
  `<button class="hero" data-cat="Electrical"><span style="flex:1;text-align:left"><span style="font-size:12px;font-weight:700;color:var(--terra);letter-spacing:.04em">NEW TENANT?</span><b style="font-family:Sora,sans-serif;font-size:18px;display:block;line-height:1.2;margin:4px 0 6px">Book a safety check before the landlord inspection</b><span class="muted" style="font-size:13px">Certified electricians from €45, report in your language</span></span><span class="eic" style="width:64px;height:64px;border-radius:20px;background:var(--mint)">${ico("shield","#0E5A4C",30)}</span></button>`}
 ${sh(`Popular in ${S.f.city}`,"See all",'data-act="seeall"')}<div class="hscroll">${popular.map(mini).join("")}</div>
 <div class="row" style="gap:10px">${[["shield","Verified ID","Every provider checked"],["lock","Escrow","Pay when it is done"],["globe",langsHere+" languages","Chat translates the rest"]].map(([i,t,s])=>`<div class="card" style="flex:1;padding:12px;display:flex;flex-direction:column;gap:6px;align-items:flex-start"><span class="eic" style="width:34px;height:34px;border-radius:10px">${ico(i,"#16201D",18)}</span><b style="font-size:13px;line-height:1.2">${t}</b><span class="muted" style="font-size:11px;line-height:1.3">${s}</span></div>`).join("")}</div>
-${sh(`Speak ${myLangs().slice(0,2).map(c=>LNAME[c]).join(" or ")} near you`,"See all",'data-act="seeall"')}<div class="col" style="gap:12px">${near.length?near.map(p=>pcard(p,true)).join(""):`<p class="muted">No providers speak ${LNAME[myLang()]} yet. Everyone else is one translated chat away.</p>`}</div>
+${sh(`Speak ${myLangs().slice(0,2).map(c=>LNAME[c]).join(" or ")} near you`,"See all",'data-act="seeall"')}<div class="col grid2" style="gap:12px">${near.length?near.map(p=>pcard(p,true)).join(""):`<p class="muted">No providers speak ${LNAME[myLang()]} yet. Everyone else is one translated chat away.</p>`}</div>
 ${recent.length?`${sh("Recently viewed","")}<div class="hscroll">${recent.map(mini).join("")}</div>`:""}
 <div class="card" style="background:var(--mint);border:none;display:flex;gap:12px;align-items:center"><span class="eic" style="width:48px;height:48px;background:#fff;border-radius:14px">${ico("star","#16201D",22)}</span><span style="flex:1"><b style="font-size:15px;display:block">Know a good tradesperson?</b><span class="muted" style="font-size:13px">Invite them to Kodu and get €10 off your next job.</span></span><button class="btn s sm" style="height:40px;border-color:var(--ink)" data-act="soon">Invite</button></div>
 <div style="height:12px"></div>${nav("ehome")}`},
@@ -433,7 +460,7 @@ search:()=>{ensure();const r=results();return `<div class="row" style="gap:10px"
 <div class="row" style="gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px"><button class="chip ${!S.cat?"on":""}" data-cat="">All</button>${CATS.map(([c])=>`<button class="chip ${S.cat===c?"on":""}" data-cat="${c}">${c}</button>`).join("")}</div>
 <div class="row" style="gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px"><button class="chip on" data-go="filters">${ico("pin","#fff",16)}${S.f.city}</button>${S.f.area?`<button class="chip on" data-fv="area" data-val="">${S.f.area} ×</button>`:""}${S.f.day?`<button class="chip on" data-fv="day" data-val="">${ico("calendar","#fff",16)}${S.f.day}${S.f.time?" "+S.f.time.toLowerCase():""} ×</button>`:S.f.time?`<button class="chip on" data-fv="time" data-val="">${S.f.time} ×</button>`:""}${S.f.minR?`<button class="chip on" data-fv="minR" data-val="0">${S.f.minR}+ ×</button>`:""}${[["lang","Speaks "+(S.f.langSel||myLangs().slice(0,2).join(" or ")),"globe"],["verified","Verified","shield"]].map(([k,l,i])=>`<button class="chip ${S.f[k]?"on":""}" data-f="${k}">${ico(i,S.f[k]?"#fff":"#16201D",16)}${l}</button>`).join("")}${["Today","This week","Weekends"].map(a=>`<button class="chip ${S.f.avail===a?"on":""}" data-fv="avail" data-val="${a}">${a}</button>`).join("")}</div>
 <div class="row between"><span class="muted"><b style="color:var(--ink)">${r.length} ${r.length===1?"provider":"providers"}</b> in ${S.f.area?S.f.area+", ":""}${S.f.city}</span><span class="muted">${S.f.sort}</span></div>
-<div class="col" style="gap:12px">${r.length?r.map(p=>pcard(p)).join(""):`<div class="empty"><span class="eic">${ico("search","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">No ${LNAME[myLang()]} speaking ${S.cat||S.q||"providers"} with these filters</b><p class="muted">Everyone on Kodu can chat with you through translation.</p><button class="btn s sm" data-f="lang">Include translated chat</button></div>`}</div>
+<div class="col grid2" style="gap:12px">${r.length?r.map(p=>pcard(p)).join(""):`<div class="empty"><span class="eic">${ico("search","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">No ${LNAME[myLang()]} speaking ${S.cat||S.q||"providers"} with these filters</b><p class="muted">Everyone on Kodu can chat with you through translation.</p><button class="btn s sm" data-f="lang">Include translated chat</button></div>`}</div>
 <div style="height:12px"></div>${nav("ehome")}`},
 
 filters:()=>{ensure();const f=S.f;return `<div class="sheetbg" data-go="back"></div><div class="sheet"><div class="grab"></div><div class="row between"><h2 style="font-size:20px">Filters</h2><button class="ib" data-go="back" aria-label="Close filters" style="width:36px;height:36px;font-size:22px;line-height:1">×</button></div>
@@ -504,7 +531,7 @@ rate:()=>{const j=S.jobs2.find(x=>x.id===S.jobId);const p=find(j.pid);S.rv=S.rv|
 <label class="f"><span class="l">A few words (optional)</span><textarea class="ta" name="rvtext" placeholder="Write in ${LNAME[myLang()]}">${esc(S.rv.text||"")}</textarea></label>
 <div class="foot"><button class="btn p" data-act="sendReview">Send review</button></div>`},
 
-bookings:()=>{ensure();const list=[...S.jobs2].reverse();return `${topbar()}<h2>Bookings</h2>${list.length?`<div class="col" style="gap:12px">${list.map(j=>{const p=find(j.pid);return `<button class="pc" data-job="${j.id}" style="gap:8px"><span class="row between" style="width:100%"><b style="font-family:Sora,sans-serif;font-size:17px">${esc(j.title)}</b>${pill(j.status)}</span><span class="row" style="gap:10px;width:100%">${av(p,36)}<span class="muted" style="text-align:left">${p.name}  ·  ${j.day} ${j.slot}${j.status!=="requested"?"<br>"+money(quote(j).total):""}</span></span></button>`}).join("")}</div>`:`<div class="empty"><span class="eic">${ico("calendar","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">No bookings yet</b><p class="muted">Request a quote from any provider and it shows up here.</p><button class="btn s sm" data-nav="ehome">Find a service</button></div>`}
+bookings:()=>{ensure();const list=[...S.jobs2].reverse();return `${topbar()}<h2>Bookings</h2>${list.length?`<div class="col grid2" style="gap:12px">${list.map(j=>{const p=find(j.pid);return `<button class="pc" data-job="${j.id}" style="gap:8px"><span class="row between" style="width:100%"><b style="font-family:Sora,sans-serif;font-size:17px">${esc(j.title)}</b>${pill(j.status)}</span><span class="row" style="gap:10px;width:100%">${av(p,36)}<span class="muted" style="text-align:left">${p.name}  ·  ${j.day} ${j.slot}${j.status!=="requested"?"<br>"+money(quote(j).total):""}</span></span></button>`}).join("")}</div>`:`<div class="empty"><span class="eic">${ico("calendar","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">No bookings yet</b><p class="muted">Request a quote from any provider and it shows up here.</p><button class="btn s sm" data-nav="ehome">Find a service</button></div>`}
 <div style="height:12px"></div>${nav("bookings")}`},
 
 chats:()=>{ensure();const list=Object.values(S.chats).sort((a,b)=>b.t-a.t);return `${topbar()}<h2>Chats</h2>${list.length?`<div class="col" style="gap:0">${list.map(c=>{const p=find(c.pid);const last=c.msgs[c.msgs.length-1];return `<button class="row" style="gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left;width:100%" data-chat="${p.id}">${av(p,48)}<span style="flex:1;min-width:0"><span class="row between"><b>${p.name}</b><span class="muted" style="font-size:12px">${last.when}</span></span><span class="muted" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${c.unread?"color:var(--ink);font-weight:700":""}">${esc(last.text)}</span></span>${c.unread?`<span class="nb">${c.unread}</span>`:""}</button>`}).join("")}</div>`:`<div class="empty"><span class="eic">${ico("chat","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">No chats yet</b><p class="muted">Message any provider from their profile. Every chat is translated both ways.</p></div>`}
@@ -639,7 +666,7 @@ phome:()=>{pensure();const news=S.pjobs.filter(j=>j.status==="new");const today=
 ${S.verified?"":`<div class="note">${ico("shield","#16201D",16)}<span><b>Verification in review.</b> You can quote now; bookings unlock when the ID and licence checks clear, usually within 24 h. <button class="link" data-act="pverify">Prototype: mark as verified</button></span></div>`}
 <button class="btn s sm" style="width:100%;height:44px" data-act="pnewreq">Prototype: a new request arrives</button>
 <div class="row between" style="font-size:15px"><span class="row" style="gap:8px"><span class="tog ${S.online!==false?"on":""}" style="pointer-events:none"></span>${S.online!==false?"Accepting new requests":"Paused, not visible in search"}</span><button class="link" style="font-size:14px" data-act="togOnline">${S.online!==false?"Pause":"Resume"}</button></div>
-${news.length?`${sh("New requests","See all",'data-nav="pjobs"')}<div class="col" style="gap:12px">${news.map(reqcard).join("")}</div>`:""}
+${news.length?`${sh("New requests","See all",'data-nav="pjobs"')}<div class="col grid2" style="gap:12px">${news.map(reqcard).join("")}</div>`:""}
 ${today.length?`${sh("Booked and paid","",'')}<div class="col" style="gap:12px">${today.map(reqcard).join("")}</div>`:""}
 <div class="card col"><b style="font-family:Sora,sans-serif;font-size:16px">This week</b><div class="row" style="gap:6px">${DAYS.map(([d,n])=>{const booked=S.pjobs.some(j=>j.status==="paid"&&j.day===d);return `<button class="day ${S.avail[d].length?"":"off"} ${booked?"sel":""}" data-nav="pjobs"><small>${d}</small><b>${n}</b></button>`}).join("")}</div><span class="muted">Dark days have a paid booking. Edit free slots under Jobs.</span></div>
 <div style="height:12px"></div>${pnav("phome")}`},
@@ -647,7 +674,7 @@ ${today.length?`${sh("Booked and paid","",'')}<div class="col" style="gap:12px">
 pjobs:()=>{pensure();S.ptab=S.ptab||"Requests";const list={Requests:S.pjobs.filter(j=>j.status==="new"||j.status==="quoted"),Booked:S.pjobs.filter(j=>j.status==="paid"||j.status==="done"),History:S.pjobs.filter(j=>["released","declined","cancelled"].includes(j.status))}[S.ptab]||[];
  return `${ptop()}<h2>Jobs</h2><div class="row" style="gap:0;border-bottom:1px solid var(--line);overflow-x:auto;margin:0 -20px;padding:0 20px">${["Requests","Booked","Calendar","Availability","History"].map(t=>`<button class="link" style="padding:10px 2px;margin-right:22px;font-size:15px;font-weight:${S.ptab===t?700:500};color:${S.ptab===t?"var(--ink)":"var(--muted)"};border-bottom:2.5px solid ${S.ptab===t?"var(--green)":"transparent"};border-radius:0" data-ptab="${t}">${t}</button>`).join("")}</div>
 ${S.ptab==="Calendar"?pcal():S.ptab==="Availability"?`<p class="sub">Tap a slot to open or close it. Expats only see open slots.</p><div class="col" style="gap:10px">${DAYS.map(([d,n])=>`<div class="card col" style="gap:8px;padding:12px 14px"><div class="row between"><b>${d} ${n} Oct</b><span class="muted">${S.avail[d].length} open</span></div><div class="row wrap" style="gap:6px">${["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"].map(t=>{const booked=S.pjobs.some(j=>j.status==="paid"&&j.day===d&&j.slot===t);return `<button class="slot ${S.avail[d].includes(t)?"sel":""}" ${booked?'disabled style="opacity:.5;text-decoration:line-through"':""} data-slot="${d}" data-t="${t}">${t}</button>`}).join("")}</div></div>`).join("")}</div>`
- :list.length?`<div class="col" style="gap:12px">${list.map(reqcard).join("")}</div>`:`<div class="empty"><span class="eic">${ico("calendar","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">Nothing here yet</b><p class="muted">${S.ptab==="Requests"?"New requests from expats land here.":S.ptab==="Booked"?"Paid bookings appear here.":"Completed and declined jobs are kept here."}</p></div>`}
+ :list.length?`<div class="col grid2" style="gap:12px">${list.map(reqcard).join("")}</div>`:`<div class="empty"><span class="eic">${ico("calendar","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">Nothing here yet</b><p class="muted">${S.ptab==="Requests"?"New requests from expats land here.":S.ptab==="Booked"?"Paid bookings appear here.":"Completed and declined jobs are kept here."}</p></div>`}
 <div style="height:12px"></div>${pnav("pjobs")}`},
 
 preq:()=>{pensure();const j=S.pjobs.find(x=>x.id===S.preqId);const e=ex(j.eid);const sp=pSpeaks(e);const q=pq(j);return `${bar()}<div class="row between"><h2 style="font-size:24px">${esc(j.title)}</h2>${ppill(j.status)}</div>

@@ -152,11 +152,37 @@ input[type=range]{width:100%;accent-color:var(--green)}
 .rot{display:inline-grid;color:var(--green)}.rot span{grid-area:1/1;animation:rotw 10s infinite;opacity:0}.rot span:nth-child(1){animation-delay:0s}.rot span:nth-child(2){animation-delay:2s}.rot span:nth-child(3){animation-delay:4s}.rot span:nth-child(4){animation-delay:6s}.rot span:nth-child(5){animation-delay:8s}
 @keyframes rotw{0%{opacity:0;transform:translateY(8px)}4%,18%{opacity:1;transform:none}22%,100%{opacity:0;transform:translateY(-8px)}}
 @media (prefers-reduced-motion:reduce){.greet.wl .bub,.rot span,.greet.wl .kd,.greet.wl .dt{animation:none!important;opacity:1;stroke-dashoffset:0;transform:none}.rot span:not(:first-child){display:none}}
+
+/* desktop layout */
+@media (min-width:900px){
+ body:not(.phone-mode) #stage{padding:0;display:block}
+ body:not(.phone-mode) #phone{width:100%;max-width:none;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}
+ body:not(.phone-mode) .screen{padding:36px 48px 0;animation:none}
+ body:not(.phone-mode) .screen>*{width:100%;max-width:520px;margin-left:auto;margin-right:auto}
+ body:not(.phone-mode) #phone.withnav .screen{padding-left:268px}
+ body:not(.phone-mode) #phone.withnav .screen>*{max-width:820px}
+ body:not(.phone-mode) .bnav{position:fixed;left:0;top:0;bottom:0;width:220px;height:auto;flex-direction:column;align-items:stretch;border-top:none;border-right:1px solid var(--line);padding:96px 12px 24px;margin:0;gap:4px;max-width:none;background:#fff}
+ body:not(.phone-mode) .bnav::before{content:"kodu";position:absolute;top:30px;left:24px;font-family:Sora,sans-serif;font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink)}
+ body:not(.phone-mode) .bnav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;height:48px;padding:0 14px;border-radius:14px;font-size:15px;color:var(--muted)}
+ body:not(.phone-mode) .bnav button.on{background:var(--mint);color:var(--ink)}
+ body:not(.phone-mode) .pil{width:auto;height:auto;background:none!important}
+ body:not(.phone-mode) .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ body:not(.phone-mode) .grid3{display:grid;grid-template-columns:repeat(3,1fr)!important;gap:12px}
+ body:not(.phone-mode) .cta{margin:auto auto 0;border-radius:20px 20px 0 0;padding-bottom:16px}
+ body:not(.phone-mode) .sheetbg{position:fixed}
+ body:not(.phone-mode) .sheet{position:fixed;left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:560px;max-height:86vh;border-radius:28px}
+ body:not(.phone-mode) .toast{left:50%;right:auto;transform:translateX(-50%);min-width:360px;top:24px}
+ body:not(.phone-mode) .rolesw{top:16px}
+ body:not(.phone-mode) .hscroll{margin:0;padding:2px 0 6px}
+ body:not(.phone-mode) .greet{height:300px!important}
+ body:not(.phone-mode) .bub2{max-width:70%}
+ body:not(.phone-mode) h2{font-size:30px}
+}
 </style>
 </head>
 <body>
 <div id="stage"><div id="phone" role="application" aria-label="Kodu prototype"><div id="rolesw" class="rolesw"><button data-switch="expat">Expat</button><button data-switch="provider">Provider</button></div></div></div>
-<div class="devbar"><span>Prototype</span><button data-dev="reset">Reset all</button><button data-switch="expat">Expat view</button><button data-switch="provider">Provider view</button></div>
+<div class="devbar"><span>Prototype</span><button data-dev="reset">Reset all</button><button data-dev="phone">Phone frame</button><button data-switch="expat">Expat view</button><button data-switch="provider">Provider view</button></div>
 <script>
 const I = {
   back:'<path d="M15 5l-7 7 7 7"/>',check:'<path d="M5 12l5 5 9-10"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
@@ -283,7 +309,7 @@ edone:()=>`<div style="margin:auto 0" class="col center"><div style="width:120px
 function render(){
   const ph=document.getElementById("phone");
   const old=ph.querySelector(".screen");const top=old?old.scrollTop:0;if(old)old.remove();ph.insertAdjacentHTML("beforeend",`<div class="screen ${anim?(dir==="back"?"back":"fwd"):"still"}" id="scr">${SCREENS[route]()}</div>`);if(!anim)ph.querySelector(".screen").scrollTop=top;anim=false;
-  document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
+  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
   const first=ph.querySelector(".in.err input, .otp input");if(first&&route==="otp")first.focus();
   if(route==="otp")countdown();
 }
@@ -314,6 +340,7 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("[data-switch],[data-go],[data-role],[data-act],[data-chip],[data-lang],[data-lvl],[data-tog],[data-doc],[data-dev]");if(!t)return;
   const form=t.closest("form");if(form)readForm(form);
   if(t.dataset.switch){switchRole(t.dataset.switch);return}
+  if(t.dataset.dev==="phone"){document.body.classList.toggle("phone-mode");t.textContent=document.body.classList.contains("phone-mode")?"Desktop layout":"Phone frame";fit();return}
   if(t.dataset.dev){if(t.dataset.dev==="reset"){try{localStorage.removeItem("kodu.proto.expat");localStorage.removeItem("kodu.proto.provider")}catch(e){}S=blank();save();history=[];go("welcome")}return}
   if(t.dataset.role){S.role=t.dataset.role;save();if(route==="welcome"){go("account")}else render();return}
   if(t.dataset.go){if(t.dataset.go==="back")goBack();else go(t.dataset.go);return}
@@ -348,7 +375,7 @@ document.addEventListener("input",e=>{
 });
 document.addEventListener("keydown",e=>{const i=e.target;if(i.closest&&i.closest("[data-otp]")&&e.key==="Backspace"&&!i.value&&i.previousElementSibling)i.previousElementSibling.focus()});
 document.addEventListener("paste",e=>{const i=e.target;if(i.closest&&i.closest("[data-otp]")){const d=(e.clipboardData.getData("text")||"").replace(/\D/g,"").slice(0,6);if(d.length){e.preventDefault();[...i.parentElement.children].forEach((x,n)=>{x.value=d[n]||"";x.classList.toggle("filled",!!x.value)})}}});
-function fit(){const ph=document.getElementById("phone");if(innerWidth<=430){ph.style.zoom="";return}const z=Math.min(1,(innerHeight-56)/844,(innerWidth-56)/390);ph.style.zoom=z<1?z:""}addEventListener("resize",fit);fit();
+function fit(){const ph=document.getElementById("phone");if(innerWidth<=430||(innerWidth>=900&&!document.body.classList.contains("phone-mode"))){ph.style.zoom="";return}const z=Math.min(1,(innerHeight-56)/844,(innerWidth-56)/390);ph.style.zoom=z<1?z:""}addEventListener("resize",fit);fit();
 render();
 </script>
 </body>
