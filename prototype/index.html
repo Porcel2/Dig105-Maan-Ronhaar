@@ -12,7 +12,7 @@
 html,body{margin:0;height:100%}
 body{background:var(--ground);font-family:'DM Sans',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
 #stage{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px}
-#phone{width:390px;height:844px;max-width:100%;background:var(--ivory);border-radius:44px;border:1px solid var(--line);overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(22,32,29,.18)}
+#phone{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;width:390px;height:844px;max-width:100%;background:var(--ivory);border-radius:44px;border:1px solid var(--line);overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(22,32,29,.18)}
 @media (max-width:430px){#stage{padding:0}#phone{width:100%;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}}
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;padding:56px 20px 0;gap:18px;overflow-y:auto;animation:in .28s ease-out}
 .screen>*{flex-shrink:0}
@@ -31,7 +31,8 @@ p{margin:0;line-height:1.5}
 .col{display:flex;flex-direction:column;gap:8px}
 .foot{margin-top:auto;display:flex;flex-direction:column;gap:12px;padding:12px 0 28px}
 .center{text-align:center}
-button{font-family:'DM Sans',sans-serif;cursor:pointer}
+button{font-family:'DM Sans',sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+*:focus{outline:none}*:focus-visible{outline:2px solid var(--green);outline-offset:2px}
 .btn{height:56px;width:100%;border-radius:28px;border:none;font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 22px}
 .btn.p{background:var(--green);color:#fff}
 .btn.s{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
@@ -45,6 +46,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 label.f{display:flex;flex-direction:column;gap:6px}
 label.f span.l{font-size:13px;font-weight:700;color:var(--muted)}
 .in{height:52px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:10px}
+.in input,.in select,.ta,.otp input{user-select:text;-webkit-user-select:text}
 .in input,.in select{flex:1;min-width:0;border:none;outline:none;background:transparent;font:inherit;font-size:16px;color:var(--ink)}
 .in input::placeholder{color:#9AA29E}
 .in:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,90,76,.12)}
