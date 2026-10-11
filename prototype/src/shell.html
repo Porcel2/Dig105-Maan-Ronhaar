@@ -89,16 +89,16 @@ label.f span.l{font-size:13px;font-weight:700;color:var(--muted)}
 .pm b{display:block;font-size:15px}.pm small{font-size:13px;color:var(--muted)}
 .photo{width:92px;height:92px;border-radius:14px;border:1.5px dashed var(--line);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted);font:inherit}
 .photo.done{border:none;background:linear-gradient(135deg,#9CC9B8,#5E8F80);color:#fff;font-weight:700}
-.pill{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:13px;font-size:12px;font-weight:700}
+.pill{display:inline-flex;align-items:center;white-space:nowrap;flex-shrink:0;height:26px;padding:0 10px;border-radius:13px;font-size:12px;font-weight:700}
 .pill.ok{background:var(--green);color:#fff}.pill.rev{background:var(--yellow);color:var(--ink)}
 .link{color:var(--green);font-weight:700;background:none;border:none;padding:0;font:inherit;font-weight:700;cursor:pointer}
 .greet{position:relative;height:300px;border-radius:28px;background:var(--mint);display:flex;align-items:center;justify-content:center}
 .bub{position:absolute;padding:8px 14px;background:#fff;border-radius:16px 16px 16px 4px;font-size:14px;font-weight:500}
-.toast{pointer-events:none;position:absolute;left:20px;right:20px;top:60px;background:var(--ink);color:#fff;border-radius:16px;padding:12px 16px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:center;animation:in .2s;z-index:5}
+.toast{pointer-events:none;position:absolute;left:20px;right:20px;top:auto;bottom:104px;background:var(--ink);color:#fff;border-radius:16px;padding:12px 16px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:center;animation:in .2s;z-index:5}
 .toast.err{background:var(--terra)}
 .rolesw{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:50;display:flex;background:rgba(22,32,29,.08);border-radius:14px;padding:2px;gap:2px}.rolesw button{height:22px;padding:0 10px;border-radius:12px;border:none;background:transparent;font:inherit;font-size:11px;font-weight:700;color:var(--muted)}.rolesw button.on{background:var(--ink);color:#fff}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.devbar{position:fixed;right:12px;top:12px;background:rgba(22,32,29,.85);color:#fff;border-radius:20px;padding:6px 12px;font-size:12px;display:flex;gap:10px;align-items:center;z-index:9}
+.devbar{position:fixed;left:12px;bottom:12px;background:rgba(22,32,29,.85);color:#fff;border-radius:20px;padding:6px 12px;font-size:12px;display:flex;gap:10px;align-items:center;z-index:9}
 .devbar button{background:none;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:12px;padding:3px 10px;font-size:12px}
 @media (max-width:430px){.devbar{display:none}}
 
@@ -149,7 +149,7 @@ input[type=range]{width:100%;accent-color:var(--green)}
 @keyframes draw{to{stroke-dashoffset:0}}@keyframes pop{to{transform:scale(1)}}
 .facepile{display:inline-flex;align-items:center;height:32px;background:var(--mint);border-radius:16px;padding:0 12px 0 3px;white-space:nowrap}
 .fp{width:24px;height:24px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:700;font-size:10px;border:2px solid #fff;margin-right:-8px}.fpt{margin-left:14px;font-size:12px;font-weight:700}
-.rot{display:inline-grid;color:var(--green)}.rot span{grid-area:1/1;animation:rotw 10s infinite;opacity:0}.rot span:nth-child(1){animation-delay:0s}.rot span:nth-child(2){animation-delay:2s}.rot span:nth-child(3){animation-delay:4s}.rot span:nth-child(4){animation-delay:6s}.rot span:nth-child(5){animation-delay:8s}
+.rot{display:inline-grid;justify-items:start;color:var(--green)}.rot span{white-space:nowrap}.rot span{grid-area:1/1;animation:rotw 10s infinite;opacity:0}.rot span:nth-child(1){animation-delay:0s}.rot span:nth-child(2){animation-delay:2s}.rot span:nth-child(3){animation-delay:4s}.rot span:nth-child(4){animation-delay:6s}.rot span:nth-child(5){animation-delay:8s}
 @keyframes rotw{0%{opacity:0;transform:translateY(8px)}4%,18%{opacity:1;transform:none}22%,100%{opacity:0;transform:translateY(-8px)}}
 @media (prefers-reduced-motion:reduce){.greet.wl .bub,.rot span,.greet.wl .kd,.greet.wl .dt{animation:none!important;opacity:1;stroke-dashoffset:0;transform:none}.rot span:not(:first-child){display:none}}
 
@@ -158,9 +158,11 @@ input[type=range]{width:100%;accent-color:var(--green)}
  body:not(.phone-mode) #stage{padding:0;display:block}
  body:not(.phone-mode) #phone{width:100%;max-width:none;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}
  body:not(.phone-mode) .screen{padding:36px 48px 0;animation:none}
- body:not(.phone-mode) .screen>*{width:100%;max-width:520px;margin-left:auto;margin-right:auto}
+ body:not(.phone-mode) .screen>*:not(.sheet):not(.sheetbg):not(.bnav){width:100%;max-width:520px;margin-left:auto;margin-right:auto}
+ body:not(.phone-mode) #phone:not(.withnav) .foot{margin-top:20px}
+ body:not(.phone-mode) .screen>.cta{margin:20px auto 0}
  body:not(.phone-mode) #phone.withnav .screen{padding-left:268px}
- body:not(.phone-mode) #phone.withnav .screen>*{max-width:820px}
+ body:not(.phone-mode) #phone.withnav .screen>*:not(.sheet):not(.sheetbg):not(.bnav){max-width:820px}
  body:not(.phone-mode) .bnav{position:fixed;left:0;top:0;bottom:0;width:220px;height:auto;flex-direction:column;align-items:stretch;border-top:none;border-right:1px solid var(--line);padding:96px 12px 24px;margin:0;gap:4px;max-width:none;background:#fff}
  body:not(.phone-mode) .bnav::before{content:"kodu";position:absolute;top:30px;left:24px;font-family:Sora,sans-serif;font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink)}
  body:not(.phone-mode) .bnav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;height:48px;padding:0 14px;border-radius:14px;font-size:15px;color:var(--muted)}
@@ -170,8 +172,8 @@ input[type=range]{width:100%;accent-color:var(--green)}
  body:not(.phone-mode) .grid3{display:grid;grid-template-columns:repeat(3,1fr)!important;gap:12px}
  body:not(.phone-mode) .cta{margin:auto auto 0;border-radius:20px 20px 0 0;padding-bottom:16px}
  body:not(.phone-mode) .sheetbg{position:fixed}
- body:not(.phone-mode) .sheet{position:fixed;left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:560px;max-height:86vh;border-radius:28px}
- body:not(.phone-mode) .toast{left:50%;right:auto;transform:translateX(-50%);min-width:360px;top:24px}
+ body:not(.phone-mode) .sheet{position:fixed;left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:560px!important;max-width:none!important;margin:0!important;max-height:86vh;border-radius:28px}
+ body:not(.phone-mode) .toast{left:50%;right:auto;transform:translateX(-50%);min-width:360px;bottom:32px}
  body:not(.phone-mode) .rolesw{top:16px}
  body:not(.phone-mode) .hscroll{margin:0;padding:2px 0 6px}
  body:not(.phone-mode) .greet{height:300px!important}
@@ -233,7 +235,7 @@ const SCREENS={
 welcome:()=>`<div class="row between"><div class="row" style="gap:8px">${mark(28,"#F6F2EA")}<span style="font-family:Sora,sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em">kodu</span></div><button class="chip" style="height:40px" aria-label="Change language">${ico("globe","#16201D",18)} EN</button></div>
 <div class="greet wl">${mark(120,"#BFE3D6").replace("<path d=\"M48","<path class=\"kd\" pathLength=\"1\" d=\"M48").replace("<circle","<circle class=\"dt\"")}<span class="bub f1" style="left:22px;top:30px">Hello</span><span class="bub f2" style="right:26px;top:62px">Tere</span><span class="bub f3" style="left:34px;bottom:64px">Hola</span><span class="bub f4" style="right:22px;bottom:34px">Привет</span><span class="bub f5" style="left:150px;top:18px">Bonjour</span>
 </div>
-<div class="col" style="gap:10px"><h1>Local help, in <span class="rot"><span>your</span><span>tu</span><span>sinu</span><span>твоём</span><span>deiner</span></span> language.</h1><p class="sub" style="font-size:16px">Book verified plumbers, electricians, painters, cleaners and movers who speak your language, or chat with anyone through live translation.</p></div>
+<div class="col" style="gap:10px"><h1>Local help, in <span class="rot"><span>your language.</span><span>tu idioma.</span><span>sinu keeles.</span><span>твоём языке.</span><span>deiner Sprache.</span></span></h1><p class="sub" style="font-size:16px">Book verified plumbers, electricians, painters, cleaners and movers who speak your language, or chat with anyone through live translation.</p></div>
 <div class="row wrap" style="gap:8px"><span class="facepile"><span class="fp" style="background:#BFE3D6">MK</span><span class="fp" style="background:#F2C14E">OS</span><span class="fp" style="background:#D9643A;color:#fff">AR</span><span class="fp" style="background:#0E5A4C;color:#fff">AV</span><span class="fpt">414 providers ready</span></span><span class="chip" style="height:32px;font-size:13px">${ico("shield","#0E5A4C",15)}Verified ID</span><span class="chip" style="height:32px;font-size:13px">${ico("lock","#0E5A4C",15)}Pay into escrow</span><span class="chip" style="height:32px;font-size:13px">${ico("globe","#0E5A4C",15)}16 languages</span><span class="chip" style="height:32px;font-size:13px">${ico("pin","#0E5A4C",15)}10 cities</span></div>
 <div class="foot"><button class="btn p" data-go="role" data-role="expat">Find a service</button><button class="btn s" data-go="role" data-role="provider">I offer services</button><p class="center" style="font-size:15px;color:var(--body)">Already have an account? <button class="link" data-go="login">Log in</button></p></div>`,
 
@@ -295,12 +297,12 @@ payout:()=>`${bar(6,6)}${head("Where should we pay you?","Kodu holds each paymen
 <p class="muted" style="line-height:1.45">Kodu reports annual earnings over €2,000 to the Estonian Tax Board as required by EU rules (DAC7). You will get a copy every January.</p>
 <div class="foot"><button class="btn p" type="submit">Finish setup</button><p class="center muted">Your profile goes live once verification clears.</p></div></form>`,
 
-pdone:()=>`<div style="margin:auto 0" class="col center" style="gap:18px"><div style="width:120px;height:120px;border-radius:60px;background:var(--mint);display:flex;align-items:center;justify-content:center;margin:0 auto 10px">${ico("check","#0E5A4C",56)}</div>
+pdone:()=>`<div class="col center" style="margin:auto;width:100%;gap:18px"><div style="width:120px;height:120px;border-radius:60px;background:var(--mint);display:flex;align-items:center;justify-content:center;margin:0 auto 10px">${ico("check","#0E5A4C",56)}</div>
 <h2>You are almost live, ${esc(S.name.split(" ")[0]||"")}</h2><p class="sub">We are checking your ID and licence. Most providers are approved within 24 hours.</p>
 <div class="card" style="text-align:left;padding:4px 16px;margin-top:10px">${[["Account","ok","Done"],["Identity check","rev","In review"],["Licence check","rev","In review"],["Payout","ok","Done"]].map(([a,k,t])=>`<div class="row between" style="padding:12px 0;border-bottom:1px solid #EDE8DF;font-size:15px"><span>${a}</span><span class="pill ${k}">${t}</span></div>`).join("")}</div></div>
 <div class="foot"><button class="btn p" data-act="soon">Set my availability</button><button class="btn s" data-act="soon">Preview my profile</button><p class="center"><button class="link" data-act="logout">Log out</button></p></div>`,
 
-edone:()=>`<div style="margin:auto 0" class="col center"><div style="width:120px;height:120px;border-radius:60px;background:var(--mint);display:flex;align-items:center;justify-content:center;margin:0 auto 10px">${ico("home","#0E5A4C",56)}</div>
+edone:()=>`<div class="col center" style="margin:auto;width:100%"><div style="width:120px;height:120px;border-radius:60px;background:var(--mint);display:flex;align-items:center;justify-content:center;margin:0 auto 10px">${ico("home","#0E5A4C",56)}</div>
 <h2>Welcome to Kodu, ${esc(S.name.split(" ")[0]||"")}</h2><p class="sub">You will see providers who speak ${Object.keys(S.langs).join(", ")||"your languages"} first, and chat with everyone else through translation.</p>
 <div class="card" style="text-align:left;margin-top:14px"><div class="row" style="gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:var(--mint);display:flex;align-items:center;justify-content:center">${ico("search","#16201D",22)}</div><div><b>Search comes next</b><div class="muted">Home, results, profile, booking and chat are the next screens to be wired in.</div></div></div></div></div>
 <div class="foot"><button class="btn p" data-go="ehome">Find a service</button><p class="center"><button class="link" data-act="logout">Log out</button></p></div>`
