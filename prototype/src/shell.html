@@ -221,6 +221,23 @@ input[type=range]{width:100%;accent-color:var(--green)}
  .foot2{flex-direction:row;justify-content:space-between;align-items:center;padding:24px 0 32px;border-top:1px solid var(--line)}
  body.phone-mode .dk{display:none!important}
 }
+
+.chatpage{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
+.chatmain{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
+.chatmain>*{flex-shrink:0}
+.citem{gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left;width:100%;color:var(--ink)}
+@media (min-width:900px){
+ body:not(.phone-mode) .nodk{display:none!important}
+ body:not(.phone-mode) #phone.chatview .screen{padding-bottom:28px;gap:0}
+ body:not(.phone-mode) #phone.chatview .screen>.chatpage{max-width:1080px;flex-direction:row;gap:0;height:calc(100vh - 64px);height:calc(100dvh - 64px);background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden}
+ body:not(.phone-mode) .chatside{width:320px;flex-shrink:0;border-right:1px solid var(--line);padding:20px 16px;overflow-y:auto;background:#fff}
+ body:not(.phone-mode) .citem{padding:12px;border-radius:14px;border-bottom:none}body:not(.phone-mode) .citem.on{background:var(--ivory)}body:not(.phone-mode) .citem:hover{background:#F6F2EA}
+ body:not(.phone-mode) .chatmain{padding:16px 24px 0;background:var(--ivory)}
+ body:not(.phone-mode) .chathead{height:56px!important;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:0}
+ body:not(.phone-mode) .chatmain .msgs{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 4px}
+ body:not(.phone-mode) .chatmain .cta{position:static;margin:0 -24px;width:auto;border-radius:0;padding:12px 24px 20px;background:#fff}
+ body:not(.phone-mode) .chatmain .bub2{max-width:62%}
+}
 </style>
 </head>
 <body>
@@ -366,7 +383,7 @@ edone:()=>`<div class="col center" style="margin:auto;width:100%"><div style="wi
 function render(){
   const ph=document.getElementById("phone");
   const old=ph.querySelector(".screen");const top=old?old.scrollTop:0;if(old)old.remove();ph.insertAdjacentHTML("beforeend",`<div class="screen ${anim?(dir==="back"?"back":"fwd"):"still"}" id="scr">${SCREENS[route]()}</div>`);if(!anim)ph.querySelector(".screen").scrollTop=top;anim=false;
-  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));ph.classList.toggle("landing",route==="welcome");document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
+  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));ph.classList.toggle("landing",route==="welcome");ph.classList.toggle("chatview",route==="chat"||route==="pchat");const mm=ph.querySelector(".msgs");if(mm)mm.scrollTop=mm.scrollHeight;document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
   const first=ph.querySelector(".in.err input, .otp input");if(first&&route==="otp")first.focus();
   if(route==="otp")countdown();
 }
