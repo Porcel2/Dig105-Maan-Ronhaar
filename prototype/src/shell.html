@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kodu prototype</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+:root{--mint:#BFE3D6;--ink:#16201D;--terra:#D9643A;--green:#0E5A4C;--ivory:#F6F2EA;--muted:#56605C;--line:#D8D2C6;--white:#FFFFFF;--body:#3B4541;--yellow:#F2C14E;--err:#C2451C;--ground:#E9E4DA}
+:root:not([data-theme="light"]){color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--ground);font-family:'DM Sans',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#stage{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+#phone{width:390px;height:844px;max-width:100%;background:var(--ivory);border-radius:44px;border:1px solid var(--line);overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(22,32,29,.18)}
+@media (max-width:430px),(max-height:900px){#stage{padding:0}#phone{width:100%;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;padding:56px 20px 0;gap:18px;overflow-y:auto;animation:in .28s ease-out}
+.screen>*{flex-shrink:0}
+@keyframes in{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.screen.back{animation-name:inb}
+.screen.still{animation:none}
+@keyframes inb{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
+h1,h2{margin:0;font-family:'Sora',sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+h1{font-size:30px}h2{font-size:28px}
+p{margin:0;line-height:1.5}
+.sub{font-size:15px;color:var(--body)}
+.muted{font-size:13px;color:var(--muted)}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.wrap{flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:8px}
+.foot{margin-top:auto;display:flex;flex-direction:column;gap:12px;padding:12px 0 28px}
+.center{text-align:center}
+button{font-family:'DM Sans',sans-serif;cursor:pointer}
+.btn{height:56px;width:100%;border-radius:28px;border:none;font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 22px}
+.btn.p{background:var(--green);color:#fff}
+.btn.s{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.g{background:var(--mint);color:var(--ink)}
+.btn.a{background:var(--terra);color:#fff}
+.btn:disabled{background:#E4DED3;color:#9AA29E;border:none;cursor:default}
+.btn.sm{height:44px;font-size:15px;width:auto}
+.ib{width:44px;height:44px;border:1px solid var(--line);border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.social{height:52px;flex:1;border:1px solid var(--line);border-radius:26px;background:#fff;font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px}
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px}.divider:before,.divider:after{content:"";flex:1;height:1px;background:var(--line)}
+label.f{display:flex;flex-direction:column;gap:6px}
+label.f span.l{font-size:13px;font-weight:700;color:var(--muted)}
+.in{height:52px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:10px}
+.in input,.in select{flex:1;min-width:0;border:none;outline:none;background:transparent;font:inherit;font-size:16px;color:var(--ink)}
+.in input::placeholder{color:#9AA29E}
+.in:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,90,76,.12)}
+.in.err{border-color:var(--terra)}
+.errt{font-size:13px;color:var(--err);font-weight:500}
+.chip{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:18px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:14px;font-weight:500;white-space:nowrap}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45;color:var(--body);cursor:pointer}
+.chk input{position:absolute;opacity:0;width:0;height:0}
+.chk .box{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--line);background:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.chk input:checked+.box{background:var(--green);border-color:var(--green)}
+.chk input:focus-visible+.box{box-shadow:0 0 0 3px rgba(14,90,76,.25)}
+.chk .box svg{opacity:0}.chk input:checked+.box svg{opacity:1}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px}
+.role{display:flex;gap:14px;align-items:center;padding:16px;border-radius:20px;background:#fff;border:1.5px solid var(--line);cursor:pointer;width:100%;text-align:left;font:inherit}
+.role.on{border-color:var(--green)}
+.role .ic{width:52px;height:52px;border-radius:16px;background:var(--ivory);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.role.on .ic{background:var(--mint)}
+.role b{font-family:'Sora',sans-serif;font-size:17px;display:block}
+.role small{font-size:13px;color:var(--muted);line-height:1.4;display:block}
+.radio{width:22px;height:22px;border-radius:11px;border:1.5px solid var(--line);background:#fff;flex-shrink:0}
+.on>.radio,.radio.on{border:6px solid var(--green)}
+.note{display:flex;gap:8px;align-items:flex-start;background:var(--mint);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.4;color:var(--body)}
+.prog{flex:1;display:flex;gap:4px;margin:0 16px}.prog span{flex:1;height:4px;border-radius:2px;background:#E4DED3}.prog span.on{background:var(--green)}
+.otp{display:flex;gap:10px}.otp input{width:48px;height:56px;border-radius:14px;border:1.5px solid var(--line);background:#fff;text-align:center;font-family:'Sora',sans-serif;font-weight:700;font-size:22px;outline:none;color:var(--ink)}
+.otp input:focus{border-color:var(--green)}.otp input.filled{border-color:var(--green)}
+.lang{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:16px;background:#fff;border:1.5px solid var(--line)}
+.lang.on{border-color:var(--green)}
+.lang .hd{display:flex;align-items:center;gap:10px;cursor:pointer;width:100%;background:none;border:none;padding:0;font:inherit;text-align:left}
+.lang .code{font-family:'Sora',sans-serif;font-weight:700;font-size:15px;width:32px}
+.lang .nm{flex:1;font-size:15px}
+.lvls{display:flex;gap:4px}.lvls button{height:28px;padding:0 9px;border-radius:14px;font-size:12px;font-weight:700;background:transparent;color:var(--muted);border:1px solid var(--line)}
+.lvls button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tog{width:52px;height:32px;border-radius:16px;background:#D8D2C6;position:relative;border:none;flex-shrink:0;padding:0}
+.tog:after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:13px;background:#fff;transition:left .15s}
+.tog.on{background:var(--green)}.tog.on:after{left:23px}
+.pm{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;border:1.5px solid var(--line);background:#fff;width:100%;font:inherit;text-align:left;cursor:pointer}
+.pm.on{border-color:var(--green)}
+.pm .tag{width:44px;height:30px;border-radius:7px;background:var(--ink);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.pm b{display:block;font-size:15px}.pm small{font-size:13px;color:var(--muted)}
+.photo{width:92px;height:92px;border-radius:14px;border:1.5px dashed var(--line);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted);font:inherit}
+.photo.done{border:none;background:linear-gradient(135deg,#9CC9B8,#5E8F80);color:#fff;font-weight:700}
+.pill{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:13px;font-size:12px;font-weight:700}
+.pill.ok{background:var(--green);color:#fff}.pill.rev{background:var(--yellow);color:var(--ink)}
+.link{color:var(--green);font-weight:700;background:none;border:none;padding:0;font:inherit;font-weight:700;cursor:pointer}
+.greet{position:relative;height:300px;border-radius:28px;background:var(--mint);display:flex;align-items:center;justify-content:center}
+.bub{position:absolute;padding:8px 14px;background:#fff;border-radius:16px 16px 16px 4px;font-size:14px;font-weight:500}
+.toast{pointer-events:none;position:absolute;left:20px;right:20px;top:60px;background:var(--ink);color:#fff;border-radius:16px;padding:12px 16px;font-size:14px;font-weight:500;display:flex;gap:10px;align-items:center;animation:in .2s;z-index:5}
+.toast.err{background:var(--terra)}
+.rolesw{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:50;display:flex;background:rgba(22,32,29,.08);border-radius:14px;padding:2px;gap:2px}.rolesw button{height:22px;padding:0 10px;border-radius:12px;border:none;background:transparent;font:inherit;font-size:11px;font-weight:700;color:var(--muted)}.rolesw button.on{background:var(--ink);color:#fff}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.devbar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(22,32,29,.85);color:#fff;border-radius:20px;padding:6px 12px;font-size:12px;display:flex;gap:10px;align-items:center;z-index:9}
+.devbar button{background:none;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:12px;padding:3px 10px;font-size:12px}
+@media (max-width:430px){.devbar{display:none}}
+
+.lc{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px;border-radius:15px;background:#fff;border:1px solid var(--line);font-size:13px;white-space:nowrap}.lc span{color:var(--muted)}.lc.on{background:var(--mint);border-color:var(--mint)}
+.bd{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:14px;font-size:13px;font-weight:700;white-space:nowrap}
+.pc{display:flex;flex-direction:column;gap:12px;align-items:flex-start;width:100%;background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;font:inherit;color:var(--ink);text-align:left}
+.bnav{position:sticky;bottom:0;margin:auto -20px 0;width:calc(100% + 40px);z-index:4;display:flex;height:84px;border-top:1px solid var(--line);background:#fff;padding-bottom:18px}
+.bnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:10px;background:none;border:none;font:inherit;font-size:12px;color:var(--muted)}
+.bnav button.on{color:var(--ink);font-weight:700}.pil{width:52px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center;position:relative}.bnav .on .pil{background:var(--mint)}
+.nb{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--terra);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}.pil .nb{position:absolute;top:-4px;right:2px}
+.cat{height:92px;border-radius:18px;border:none;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:14px;font:inherit;font-size:14px;font-weight:700;color:var(--ink)}
+.jobcard{width:100%;background:var(--ink);border:none;border-radius:20px;padding:16px;color:#fff;text-align:left;font:inherit}
+.stat{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 0}.stat b{font-family:Sora,sans-serif;font-size:19px}.stat small{font-size:12px;color:var(--muted)}
+.day{width:44px;height:60px;border-radius:14px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#fff;border:1px solid var(--line);font:inherit;color:var(--ink)}.day small{font-size:11px;opacity:.75}.day b{font-size:17px}.day.off{color:#A9AFAB;background:transparent;border-color:transparent}.day.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.slot{height:40px;padding:0 14px;border-radius:12px;background:#fff;border:1px solid var(--line);font:inherit;font-size:14px;font-weight:600;color:var(--ink)}.slot.sel{background:var(--green);border-color:var(--green);color:#fff}
+.cta{position:sticky;bottom:0;margin:auto -20px 0;width:calc(100% + 40px);z-index:4;padding:12px 20px 28px;background:var(--ivory);border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.ta{min-height:96px;border-radius:14px;background:#fff;border:1px solid var(--line);padding:12px 16px;font:inherit;font-size:16px;color:var(--ink);resize:vertical;outline:none}.ta:focus{border-color:var(--green)}
+.sheetbg{position:absolute;inset:0;background:rgba(22,32,29,.4)}.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:12px 20px 28px;display:flex;flex-direction:column;gap:14px;max-height:92%;overflow-y:auto}.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto}
+.empty{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}.eic{width:72px;height:72px;border-radius:36px;background:var(--mint);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.qcard{width:82%;background:#fff;border:1.5px solid var(--green);border-radius:18px 18px 18px 4px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.bub2{max-width:80%;background:#fff;border:1px solid var(--line);border-radius:18px 18px 18px 4px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.4}.bub2.me{background:var(--green);color:#fff;border:none;border-radius:18px 18px 4px 18px}.orig{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:flex-start}.me .orig{color:rgba(255,255,255,.72)}
+.dots{display:inline-flex;gap:5px}.dots i{width:7px;height:7px;border-radius:4px;background:var(--muted);animation:dot 1s infinite}.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}@keyframes dot{0%,100%{opacity:.3}50%{opacity:1}}
+.starb{font-size:40px;line-height:1;background:none;border:none;color:#D8D2C6;padding:0}.starb.on{color:var(--yellow)}
+.pill.dark{background:var(--ink);color:#fff}.pill.gray{background:#E9E4DA;color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--green)}
+
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.ch{font-size:11px;font-weight:700;color:var(--muted);text-align:center;padding-bottom:4px}
+.cc{position:relative;height:46px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:14px;background:#fff;border:1px solid #EDE8DF;font-family:inherit;color:var(--ink);padding:0}.cc:disabled{color:#A9AFAB;cursor:default}.cc.sel{background:var(--ink)!important;color:#fff;border-color:var(--ink)}.cc.empty{background:transparent;border:none}.cc.has{cursor:pointer;border-color:var(--line)}.cc.has:hover,.cc.pin{background:var(--mint);border-color:var(--mint)}.cc.today b{color:var(--terra)}
+.dots2{display:flex;gap:2px;height:5px}.dots2 i{width:5px;height:5px;border-radius:3px;display:block}.lg{width:8px;height:8px;border-radius:4px;display:inline-block}
+.pop{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:6px;width:250px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:0 12px 30px rgba(22,32,29,.16);z-index:20;text-align:left;cursor:default}.cc:nth-child(7n+1) .pop,.cc:nth-child(7n+2) .pop{left:0;transform:none}.cc:nth-child(7n) .pop,.cc:nth-child(7n-1) .pop{left:auto;right:0;transform:none}
+.cc.has:hover .pop,.cc.pin .pop,.cc.has:focus-within .pop{display:block}
+.prow{position:relative;padding:6px;border-radius:10px;cursor:pointer}.prow:hover,.prow.pin,.prow:focus{background:var(--ivory)}.dotc{width:8px;height:8px;border-radius:4px;flex-shrink:0}
+.tip{display:none;position:absolute;left:100%;top:0;margin-left:8px;width:240px;background:var(--ink);color:#fff;border-radius:14px;padding:12px;box-shadow:0 12px 30px rgba(22,32,29,.25);z-index:30;cursor:default}.tip .muted{color:rgba(255,255,255,.7)}.tip .chip{background:rgba(255,255,255,.12);color:#fff;border-color:transparent}.tip b{color:#fff}
+.prow:hover .tip,.prow.pin .tip,.prow:focus .tip{display:block}
+@media (max-width:520px){.tip{left:0;top:100%;margin:6px 0 0}}
+</style>
+</head>
+<body>
+<div id="stage"><div id="phone" role="application" aria-label="Kodu prototype"><div id="rolesw" class="rolesw"><button data-switch="expat">Expat</button><button data-switch="provider">Provider</button></div></div></div>
+<div class="devbar"><span>Prototype</span><button data-dev="reset">Reset all</button><button data-switch="expat">Expat view</button><button data-switch="provider">Provider view</button></div>
+<script>
+const I = {
+  back:'<path d="M15 5l-7 7 7 7"/>',check:'<path d="M5 12l5 5 9-10"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+  home:'<path d="M4 11l8-7 8 7v9H4z"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  pin:'<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',plus:'<path d="M12 5v14M5 12h14"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',star:'<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1.1 6.3L12 17.5 6.4 20.4l1.1-6.3L3 9.7l6.2-.9z"/>',send:'<path d="M4 12l16-8-6 16-2-6z"/>',sparkle:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><path d="M19 15l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/>',wrench:'<path d="M14 6a4 4 0 0 0 5 5l-9 9-3-3 9-9a4 4 0 0 0-2-2z"/><path d="M4 20l3-3"/>',truck:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>'
+};
+const ico=(n,c='currentColor',s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
+const mark=(h,cut)=>`<svg width="${Math.round(h*88/90)}" height="${h}" viewBox="16 16 88 90" aria-hidden="true"><path d="M20 54 L60 20 L100 54 V102 H20Z" fill="#16201D" stroke="#16201D" stroke-width="7" stroke-linejoin="round"/><path d="M48 46 V94 M76 48 L52 70 L76 92" fill="none" stroke="${cut}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="60" cy="40" r="4.5" fill="#D9643A"/></svg>`;
+
+const LANGS=[["ES","Spanish"],["EN","English"],["ET","Estonian"],["RU","Russian"],["UK","Ukrainian"],["DE","German"],["FI","Finnish"],["PT","Portuguese"],["FR","French"],["IT","Italian"]];
+const LEVELS=["A2","B1","B2","C1","Native"];
+const TRADES={Plumbing:["Leaks","Boilers","Taps and mixers","Bathroom fittings","Radiators","Drains","Washing machines"],Electrical:["Sockets","Lighting","Fuse boards","EV chargers","Safety checks","Appliances"],Painting:["Interior walls","Ceilings","Wall prep","Exterior","Wallpaper","Colour advice"]};
+
+const blank=()=>({role:null,name:"",email:"",phone:"",password:"",terms:false,tips:false,langs:{},address:"",homeType:"Rented flat",landlord:false,
+  entity:"Sole trader (FIE)",trade:"Plumbing",jobs:[],rate:"",areas:"",licence:"",docType:"ID card",docs:{},payout:"Weekly payout",iban:"",holder:"",otpOk:false,loggedIn:false});
+let S=blank();
+try{const s=localStorage.getItem("kodu.proto");if(s)S=Object.assign(blank(),JSON.parse(s))}catch(e){}
+const save=()=>{try{localStorage.setItem("kodu.proto",JSON.stringify(S))}catch(e){}};
+
+let route="welcome", dir="fwd", err={}, history=[], anim=true;
+function go(r,back){anim=true;dir=back?"back":"fwd";if(!back)history.push(route);route=r;err={};render()}
+function goBack(){anim=true;const r=history.pop()||"welcome";dir="back";route=r;err={};render()}
+let toastT;function toast(t,kind){document.querySelectorAll(".toast").forEach(x=>x.remove());const el=document.createElement("div");el.className="toast"+(kind?" "+kind:"");el.innerHTML=ico(kind==="err"?"shield":"check","#fff",18)+t;document.getElementById("phone").appendChild(el);clearTimeout(toastT);toastT=setTimeout(()=>el.remove(),2400)}
+
+const bar=(step,total,right="")=>`<div class="row between" style="height:44px"><button class="ib" data-go="back" aria-label="Back">${ico("back")}</button>${step?`<div class="prog" aria-label="Step ${step} of ${total}">${Array.from({length:total},(_,i)=>`<span class="${i<step?"on":""}"></span>`).join("")}</div>`:""}${step?`<button class="link" data-act="skip" style="font-size:13px;color:var(--muted);min-width:44px;text-align:right">Skip</button>`:`<span class="muted" style="font-weight:700;min-width:44px;text-align:right">${right}</span>`}</div>`;
+const head=(t,s)=>`<div class="col"><h2>${t}</h2>${s?`<p class="sub">${s}</p>`:""}</div>`;
+const field=(k,label,ph,type="text",extra="")=>`<label class="f"><span class="l">${label}</span><div class="in ${err[k]?"err":""}"><input name="${k}" type="${type}" placeholder="${ph}" value="${(S[k]||"").replace(/"/g,"&quot;")}" ${extra}>${type==="password"?`<button type="button" class="link" data-act="peek" aria-label="Show password" style="display:flex">${ico("eye","#56605C",18)}</button>`:""}</div>${err[k]?`<span class="errt">${err[k]}</span>`:""}</label>`;
+const chk=(k,label,on)=>`<label class="chk"><input type="checkbox" name="${k}" ${on?"checked":""}><span class="box">${ico("check","#fff",16)}</span><span>${label}</span></label>`;
+const chips=(k,items,sel,multi)=>`<div class="row wrap">${items.map(i=>`<button type="button" class="chip ${(multi?sel.includes(i):sel===i)?"on":""}" data-chip="${k}" data-val="${i}">${i}</button>`).join("")}</div>`;
+const esc=s=>String(s).replace(/</g,"&lt;");
+
+const V={
+  email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?"":"Enter a full email address, for example name@domain.com",
+  phone:v=>/^\+?[\d\s]{7,}$/.test(v)?"":"Enter a phone number with country code",
+  password:v=>v.length<8?"Use at least 8 characters":!/\d/.test(v)?"Add one number to make it stronger":"",
+  name:v=>v.trim().split(/\s+/).length>=2?"":"Enter your first and last name",
+  iban:v=>/^EE\d{2}(\s?\d{4}){4}$/i.test(v.replace(/\s+/g," ").trim())?"":"Enter an Estonian IBAN, EE followed by 18 digits",
+  rate:v=>+v>=15&&+v<=150?"":"Enter an hourly rate between €15 and €150",
+  licence:v=>v.trim().length>=4?"":"Enter your register number",
+  address:v=>v.trim().length>=6?"":"Enter a street address",
+  holder:v=>v.trim()?"":"Enter the account holder name",
+  areas:v=>v.trim()?"":"Name at least one district"
+};
+function validate(keys){err={};keys.forEach(k=>{const e=V[k]?V[k](S[k]||""):"";if(e)err[k]=e});return Object.keys(err).length===0}
+
+const SCREENS={
+welcome:()=>`<div class="row between"><div class="row" style="gap:8px">${mark(28,"#F6F2EA")}<span style="font-family:Sora,sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em">kodu</span></div><button class="chip" style="height:40px" aria-label="Change language">${ico("globe","#16201D",18)} EN</button></div>
+<div class="greet">${mark(120,"#BFE3D6")}<span class="bub" style="left:24px;top:36px">Hello</span><span class="bub" style="right:28px;top:70px">Tere</span><span class="bub" style="left:36px;bottom:60px">Hola</span><span class="bub" style="right:24px;bottom:34px">Привет</span></div>
+<div class="col" style="gap:10px"><h1>Local help, in your language.</h1><p class="sub" style="font-size:16px">Book verified electricians, plumbers and painters who speak your language.</p></div>
+<div class="foot"><button class="btn p" data-go="role" data-role="expat">Find a service</button><button class="btn s" data-go="role" data-role="provider">I offer services</button><p class="center" style="font-size:15px;color:var(--body)">Already have an account? <button class="link" data-go="login">Log in</button></p></div>`,
+
+login:()=>`${bar()}${head("Welcome back","Log in to see your bookings and chats.")}
+<div class="row"><button class="social" data-act="social">Apple</button><button class="social" data-act="social"><span style="font-family:Sora,sans-serif;font-weight:700">G</span>Google</button></div><div class="divider">or with email</div>
+<form data-form="login" class="col" style="gap:14px">${field("email","Email","name@domain.com","email",'autocomplete="email"')}${field("password","Password","••••••••","password",'autocomplete="current-password"')}
+<div class="row between">${chk("keep","Keep me logged in",true)}<button type="button" class="link" data-act="forgot" style="font-size:14px">Forgot password?</button></div>
+<div class="foot"><button class="btn p" type="submit">Log in</button><p class="center" style="font-size:14px;color:var(--body)">New to Kodu? <button type="button" class="link" data-go="role">Create an account</button></p></div></form>`,
+
+role:()=>`${bar()}${head("Who are you joining as?","You can add the other role later from your profile.")}
+<button class="role ${S.role==="expat"?"on":""}" data-role="expat"><span class="ic">${ico("home","#16201D",24)}</span><span style="flex:1"><b>I need help at home</b><small>Find verified local providers who speak your language</small></span><span class="radio"></span></button>
+<button class="role ${S.role==="provider"?"on":""}" data-role="provider"><span class="ic">${ico("check","#16201D",24)}</span><span style="flex:1"><b>I offer services</b><small>Get jobs from expats, with translated chat and guaranteed payment</small></span><span class="radio"></span></button>
+<div class="note">${ico("globe","#16201D",16)}<span>Both sides see Kodu in their own language. Translation happens inside every chat.</span></div>
+<div class="foot"><button class="btn p" data-go="account" ${S.role?"":"disabled"}>Continue</button><p class="center"><button class="link" data-act="skip" style="color:var(--muted);font-size:13px">Prototype: skip registration</button></p></div>`,
+
+account:()=>{const pr=S.role==="provider";return `${bar(1,pr?6:4)}${head(pr?"Create your provider account":"Create your account",pr?"Expats will see your name, trade and languages.":"Takes about two minutes.")}
+<form data-form="account" class="col" style="gap:14px">${field("name","Full name","First and last name","text",'autocomplete="name"')}${field("email","Email","name@domain.com","email",'autocomplete="email"')}${field("phone","Phone","+372 5…","tel",'autocomplete="tel"')}${field("password","Password","At least 8 characters, one number","password",'autocomplete="new-password"')}
+${pr?`<div class="col"><span class="muted" style="font-weight:700">I work as</span>${chips("entity",["Sole trader (FIE)","Company (OÜ)"],S.entity)}</div>`:""}
+${chk("terms",pr?"I agree to the <b>Terms</b>, the <b>Provider Agreement</b> and the <b>Privacy Notice</b>":"I agree to the <b>Terms of Service</b> and have read the <b>Privacy Notice</b>",S.terms)}${err.terms?`<span class="errt">${err.terms}</span>`:""}
+${pr?"":chk("tips","Send me tips for settling in Estonia (optional)",S.tips)}
+<div class="foot"><button class="btn p" type="submit">Continue</button></div></form>`},
+
+otp:()=>{const pr=S.role==="provider";return `${bar(2,pr?6:4)}${head("Check your phone",`We sent a 6 digit code to ${esc(S.phone||"your phone")}. Phone verification keeps fake accounts off Kodu.`)}
+<div class="otp" data-otp>${Array.from({length:6},(_,i)=>`<input inputmode="numeric" maxlength="1" aria-label="Digit ${i+1}">`).join("")}</div>
+<p class="sub" style="font-size:14px">Resend code in <b id="cd">0:30</b></p><p class="muted">Prototype: any 6 digits work, try 428 136.</p>
+<div class="foot"><button class="btn p" data-act="verify">Verify</button><p class="center" style="font-size:14px;color:var(--body)">Wrong number? <button class="link" data-go="back">Change it</button></p></div>`},
+
+langs:()=>{const pr=S.role==="provider";return `${bar(pr?4:3,pr?6:4)}${head(pr?"Languages you can work in":"Which languages do you speak?",pr?"Be honest about levels. Expats filter on them, and chat translates the rest.":"We rank providers who share one, and translate chat with the rest.")}
+<div class="col">${LANGS.map(([c,n])=>{const on=c in S.langs;return `<div class="lang ${on?"on":""}"><button class="hd" data-lang="${c}" aria-pressed="${on}"><span class="code">${c}</span><span class="nm">${n}</span><span class="box" style="width:24px;height:24px;border-radius:7px;border:1.5px solid ${on?"var(--green)":"var(--line)"};background:${on?"var(--green)":"#fff"};display:inline-flex;align-items:center;justify-content:center">${on?ico("check","#fff",16):""}</span></button>${on?`<div class="lvls" role="group" aria-label="${n} level">${LEVELS.map(l=>`<button type="button" class="${S.langs[c]===l?"on":""}" data-lvl="${c}" data-val="${l}">${l}</button>`).join("")}</div>`:`<span class="muted">Tap to add</span>`}</div>`}).join("")}</div>
+${err.langs?`<span class="errt">${err.langs}</span>`:""}
+${pr?`<div class="note">${ico("globe","#16201D",16)}<span>A short voice sample helps expats hear your English before they book. Optional, 20 seconds.</span></div>`:`<p class="muted">App language follows your first language. Change it anytime in Settings.</p>`}
+<div class="foot"><button class="btn p" data-act="langsNext">Continue</button></div>`},
+
+home:()=>`${bar(4,4)}${head("Where is home?","Only the district is shown to providers until you book.")}
+<form data-form="home" class="col" style="gap:14px">${field("address","Address","Street, district, Tallinn","text",'autocomplete="street-address"')}
+<div style="height:140px;border-radius:18px;background:#DCE6E0;position:relative;overflow:hidden"><span style="position:absolute;left:50%;top:40px;transform:translateX(-50%)">${ico("pin","#0E5A4C",36)}</span></div>
+<div class="col"><span class="muted" style="font-weight:700">I live in a</span>${chips("homeType",["Rented flat","Owned flat","House","Shared"],S.homeType)}</div>
+<div class="row between" style="font-size:15px"><span>Landlord arranges repairs</span><button type="button" class="tog ${S.landlord?"on":""}" data-tog="landlord" role="switch" aria-checked="${S.landlord}" aria-label="Landlord arranges repairs"></button></div>
+<div class="foot"><button class="btn p" type="submit">Finish and find help</button><p class="center"><button type="button" class="link" data-act="skipHome">Skip for now</button></p></div></form>`,
+
+trade:()=>`${bar(3,6)}${head("What do you do?","Pick your main trade and the jobs you take.")}
+<form data-form="trade" class="col" style="gap:14px">${chips("trade",Object.keys(TRADES),S.trade)}
+<div class="col"><span class="muted" style="font-weight:700">Jobs</span>${chips("jobs",TRADES[S.trade],S.jobs,true)}${err.jobs?`<span class="errt">${err.jobs}</span>`:""}</div>
+<label class="f"><span class="l">Hourly rate</span><div class="in ${err.rate?"err":""}"><input name="rate" inputmode="decimal" placeholder="38" value="${S.rate}"><span class="muted">€ / h</span></div>${err.rate?`<span class="errt">${err.rate}</span>`:""}</label>
+${field("areas","Areas you cover","Kesklinn, Kalamaja…")}${field("licence","Licence or registration number","EHR …")}
+<div class="foot"><button class="btn p" type="submit">Continue</button></div></form>`,
+
+verify:()=>`${bar(5,6)}${head("Verify your identity","Required before you can take jobs. Checked by our verification partner, never stored by Kodu.")}
+<div class="col"><span class="muted" style="font-weight:700">ID document</span>${chips("docType",["ID card","Passport","Residence permit"],S.docType)}</div>
+<div class="row">${["Front","Back","Selfie"].map(d=>`<button type="button" class="photo ${S.docs[d]?"done":""}" data-doc="${d}">${S.docs[d]?ico("check","#fff",22):ico("plus","#56605C",20)}${d}</button>`).join("")}</div>
+<div class="col"><span class="muted" style="font-weight:700">Proof of qualification</span><button type="button" class="photo ${S.docs.Licence?"done":""}" data-doc="Licence">${S.docs.Licence?ico("check","#fff",22):ico("plus","#56605C",20)}Licence photo</button></div>
+${err.docs?`<span class="errt">${err.docs}</span>`:""}
+<div class="note">${ico("lock","#16201D",16)}<span>Documents are deleted after the check. Verified ID and Licensed badges appear on your profile within 24 h.</span></div>
+<div class="foot"><button class="btn p" data-act="submitDocs">Submit for verification</button></div>`,
+
+payout:()=>`${bar(6,6)}${head("Where should we pay you?","Kodu holds each payment in escrow and releases it when the customer confirms the job.")}
+<form data-form="payout" class="col" style="gap:14px">${field("holder","Account holder","Name on the account")}${field("iban","IBAN","EE00 0000 0000 0000 0000")}
+<div class="col">${[["Weekly payout","Every Monday, free","WEEK"],["Instant payout","Within 30 min, 1% fee","INST"]].map(([t,s,g])=>`<button type="button" class="pm ${S.payout===t?"on":""}" data-chip="payout" data-val="${t}"><span class="tag">${g}</span><span style="flex:1"><b>${t}</b><small>${s}</small></span><span class="radio ${S.payout===t?"on":""}"></span></button>`).join("")}</div>
+<p class="muted" style="line-height:1.45">Kodu reports annual earnings over €2,000 to the Estonian Tax Board as required by EU rules (DAC7). You will get a copy every January.</p>
+<div class="foot"><button class="btn p" type="submit">Finish setup</button><p class="center muted">Your profile goes live once verification clears.</p></div></form>`,
+
+pdone:()=>`<div style="margin:auto 0" class="col center" style="gap:18px"><div style="width:120px;height:120px;border-radius:60px;background:var(--mint);display:flex;align-items:center;justify-content:center;margin:0 auto 10px">${ico("check","#0E5A4C",56)}</div>
+<h2>You are almost live, ${esc(S.name.split(" ")[0]||"")}</h2><p class="sub">We are checking your ID and licence. Most providers are approved within 24 hours.</p>
+<div class="card" style="text-align:left;padding:4px 16px;margin-top:10px">${[["Account","ok","Done"],["Identity check","rev","In review"],["Licence check","rev","In review"],["Payout","ok","Done"]].map(([a,k,t])=>`<div class="row between" style="padding:12px 0;border-bottom:1px solid #EDE8DF;font-size:15px"><span>${a}</span><span class="pill ${k}">${t}</span></div>`).join("")}</div></div>
+<div class="foot"><button class="btn p" data-act="soon">Set my availability</button><button class="btn s" data-act="soon">Preview my profile</button><p class="center"><button class="link" data-act="logout">Log out</button></p></div>`,
+
+edone:()=>`<div style="margin:auto 0" class="col center"><div style="width:120px;height:120px;border-radius:60px;background:var(--mint);display:flex;align-items:center;justify-content:center;margin:0 auto 10px">${ico("home","#0E5A4C",56)}</div>
+<h2>Welcome to Kodu, ${esc(S.name.split(" ")[0]||"")}</h2><p class="sub">You will see providers who speak ${Object.keys(S.langs).join(", ")||"your languages"} first, and chat with everyone else through translation.</p>
+<div class="card" style="text-align:left;margin-top:14px"><div class="row" style="gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:var(--mint);display:flex;align-items:center;justify-content:center">${ico("search","#16201D",22)}</div><div><b>Search comes next</b><div class="muted">Home, results, profile, booking and chat are the next screens to be wired in.</div></div></div></div></div>
+<div class="foot"><button class="btn p" data-go="ehome">Find a service</button><p class="center"><button class="link" data-act="logout">Log out</button></p></div>`
+};
+
+function render(){
+  const ph=document.getElementById("phone");
+  const old=ph.querySelector(".screen");const top=old?old.scrollTop:0;if(old)old.remove();ph.insertAdjacentHTML("beforeend",`<div class="screen ${anim?(dir==="back"?"back":"fwd"):"still"}" id="scr">${SCREENS[route]()}</div>`);if(!anim)ph.querySelector(".screen").scrollTop=top;anim=false;
+  document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
+  const first=ph.querySelector(".in.err input, .otp input");if(first&&route==="otp")first.focus();
+  if(route==="otp")countdown();
+}
+let cdT;function countdown(){clearInterval(cdT);let n=30;cdT=setInterval(()=>{n--;const el=document.getElementById("cd");if(!el){clearInterval(cdT);return}el.textContent="0:"+String(Math.max(n,0)).padStart(2,"0");if(n<=0){el.parentElement.innerHTML='<button class="link" data-act="resend">Resend code</button>';clearInterval(cdT)}},1000)}
+
+const SAMPLE={expat:{name:"Sofia Ramírez",email:"sofia.ramirez@gmail.com",phone:"+372 5555 0418",password:"kodu2026",terms:true,langs:{ES:"Native",EN:"C1",ET:"A2"},address:"Narva mnt 7, Kesklinn, Tallinn",homeType:"Rented flat"},
+  provider:{name:"Mart Kask",email:"mart.kask@gmail.com",phone:"+372 5555 0902",password:"kodu2026",terms:true,langs:{ET:"Native",EN:"C1",RU:"B2"},trade:"Plumbing",jobs:["Leaks","Boilers","Taps and mixers"],rate:"38",areas:"Kesklinn, Kalamaja",licence:"EHR 1182 2306",docs:{Front:true,Back:true,Selfie:true,Licence:true},holder:"Mart Kask",iban:"EE38 2200 2210 2014 5685"}};
+function skipStep(){
+  if(route==="book"){S.draft.title=S.draft.title||"Leaking kitchen tap";S.draft.desc=S.draft.desc||"Dripping for a week, the cupboard under the sink is wet.";S.draft["Photo 1"]=true;save();toast("Filled with sample data");go("slots");return}
+  if(route==="slots"){const p=find(S.view);const d=Object.keys(p.slots)[0];S.draft.day=d;S.draft.slot=p.slots[d][0];save();document.querySelector("[data-act=sendRequest]").click();return}
+  if(!S.role)S.role="expat";
+  const smp=SAMPLE[S.role];Object.keys(smp).forEach(k=>{const empty=S[k]===""||S[k]===false||(typeof S[k]==="object"&&S[k]&&!Object.keys(S[k]).length);if(empty||S[k]==null)S[k]=JSON.parse(JSON.stringify(smp[k]))});
+  S.otpOk=true;
+  const next={role:"account",account:"otp",otp:S.role==="provider"?"trade":"langs",trade:"langs",langs:S.role==="provider"?"verify":"home",home:"ehome",verify:"payout",payout:"pdone"}[route];
+  if(next==="ehome"||next==="pdone")S.loggedIn=true;
+  save();toast("Filled with sample data");go(next||"welcome");
+}
+function switchRole(to){
+  if(S.loggedIn&&S.role===to)return;
+  try{if(S.loggedIn)localStorage.setItem("kodu.proto."+S.role,JSON.stringify(S))}catch(e){}
+  let next=null;try{const x=localStorage.getItem("kodu.proto."+to);if(x)next=Object.assign(blank(),JSON.parse(x))}catch(e){}
+  if(!next){next=blank();next.role=to;Object.assign(next,JSON.parse(JSON.stringify(SAMPLE[to])));next.otpOk=true;next.loggedIn=true;if(to==="provider")next.verified=true}
+  S=next;S.loggedIn=true;save();history=[];toast(to==="provider"?"Provider view, logged in as "+S.name.split(" ")[0]:"Expat view, logged in as "+S.name.split(" ")[0]);go(to==="provider"?"phome":"ehome");
+}
+function readForm(form){form.querySelectorAll("input[name]").forEach(i=>{if(i.type==="checkbox")S[i.name]=i.checked;else S[i.name]=i.value})}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-switch],[data-go],[data-role],[data-act],[data-chip],[data-lang],[data-lvl],[data-tog],[data-doc],[data-dev]");if(!t)return;
+  const form=t.closest("form");if(form)readForm(form);
+  if(t.dataset.switch){switchRole(t.dataset.switch);return}
+  if(t.dataset.dev){if(t.dataset.dev==="reset"){try{localStorage.removeItem("kodu.proto.expat");localStorage.removeItem("kodu.proto.provider")}catch(e){}S=blank();save();history=[];go("welcome")}return}
+  if(t.dataset.role){S.role=t.dataset.role;save();if(route==="welcome"){go("account")}else render();return}
+  if(t.dataset.go){if(t.dataset.go==="back")goBack();else go(t.dataset.go);return}
+  if(t.dataset.chip){const k=t.dataset.chip,v=t.dataset.val;if(k==="jobs"){S.jobs=S.jobs.includes(v)?S.jobs.filter(x=>x!==v):[...S.jobs,v]}else{S[k]=v;if(k==="trade")S.jobs=[]}save();render();return}
+  if(t.dataset.lang){const c=t.dataset.lang;if(c in S.langs)delete S.langs[c];else S.langs[c]=Object.keys(S.langs).length?"B1":"Native";save();render();return}
+  if(t.dataset.lvl){S.langs[t.dataset.lvl]=t.dataset.val;save();render();return}
+  if(t.dataset.tog){S[t.dataset.tog]=!S[t.dataset.tog];save();render();return}
+  if(t.dataset.doc){S.docs[t.dataset.doc]=true;save();render();toast(t.dataset.doc+" photo added");return}
+  const a=t.dataset.act;
+  if(a==="peek"){const i=t.previousElementSibling;i.type=i.type==="password"?"text":"password";return}
+  if(a==="social"){toast("Apple and Google sign in are not wired in the prototype");return}
+  if(a==="forgot"){toast("We would email a reset link to "+(S.email||"your address"));return}
+  if(a==="verify"){const d=[...document.querySelectorAll("[data-otp] input")].map(i=>i.value).join("");if(d.length<6){toast("Enter all six digits","err");return}S.otpOk=true;save();go(S.role==="provider"?"trade":"langs");return}
+  if(a==="resend"){toast("New code sent");countdown();render();return}
+  if(a==="langsNext"){if(!Object.keys(S.langs).length){err={langs:"Add at least one language"};render();return}if(S.loggedIn){save();goBack();return}go(S.role==="provider"?"verify":"home");return}
+  if(a==="skipHome"){S.loggedIn=true;save();go("edone");return}
+  if(a==="submitDocs"){if(!(S.docs.Front&&S.docs.Back&&S.docs.Selfie)){err={docs:"Add front, back and a selfie to continue"};render();return}if(S.loggedIn){goBack();return}go("payout");return}
+  if(a==="soon"){toast("That screen is built next");return}
+  if(a==="skip"){skipStep();return}
+  if(a==="logout"){try{localStorage.removeItem("kodu.proto."+S.role)}catch(e){}S=blank();save();history=[];go("welcome");return}
+});
+document.addEventListener("submit",e=>{
+  e.preventDefault();const f=e.target;readForm(f);const k=f.dataset.form;
+  if(k==="login"){if(!validate(["email","password"])){render();return}S.loggedIn=true;save();toast("Logged in as "+S.email);go(S.role==="provider"?"phome":"ehome");return}
+  if(k==="account"){const ok=validate(["name","email","phone","password"]);if(!S.terms)err.terms="You need to accept the terms to continue";if(!ok||err.terms){render();return}save();go("otp");return}
+  if(k==="home"){if(!validate(["address"])){render();return}S.loggedIn=true;save();go("edone");return}
+  if(k==="trade"){const ok=validate(["rate","areas","licence"]);if(!S.jobs.length)err.jobs="Pick at least one job";if(!ok||err.jobs){render();return}save();if(S.loggedIn){goBack();return}go("langs");return}
+  if(k==="payout"){if(!validate(["holder","iban"])){render();return}if(S.loggedIn){save();goBack();return}S.loggedIn=true;save();go("pdone");return}
+});
+document.addEventListener("input",e=>{
+  const i=e.target;if(i.closest("[data-otp]")){i.value=i.value.replace(/\D/g,"").slice(-1);i.classList.toggle("filled",!!i.value);if(i.value&&i.nextElementSibling)i.nextElementSibling.focus()}
+});
+document.addEventListener("keydown",e=>{const i=e.target;if(i.closest&&i.closest("[data-otp]")&&e.key==="Backspace"&&!i.value&&i.previousElementSibling)i.previousElementSibling.focus()});
+document.addEventListener("paste",e=>{const i=e.target;if(i.closest&&i.closest("[data-otp]")){const d=(e.clipboardData.getData("text")||"").replace(/\D/g,"").slice(0,6);if(d.length){e.preventDefault();[...i.parentElement.children].forEach((x,n)=>{x.value=d[n]||"";x.classList.toggle("filled",!!x.value)})}}});
+render();
+</script>
+</body>
+</html>
