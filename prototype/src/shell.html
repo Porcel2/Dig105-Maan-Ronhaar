@@ -136,6 +136,9 @@ input[type=range]{width:100%;accent-color:var(--green)}
 .prow:hover .tip,.prow.pin .tip,.prow:focus .tip{display:block}
 @media (max-width:520px){.tip{left:0;top:100%;margin:6px 0 0}}
 
+.hwrap{position:relative;margin:0 -20px}.hwrap .hscroll{margin:0;padding:2px 20px 6px;scroll-snap-type:x proximity}.hwrap .mini{scroll-snap-align:start}
+.harr{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 6px 16px rgba(22,32,29,.14);display:flex;align-items:center;justify-content:center;z-index:3;padding:0}.harr.prev{left:8px}.harr.next{right:8px}.hwrap.atstart .prev,.hwrap.atend .next,.hwrap.noscroll .harr{display:none}
+.hwrap::before,.hwrap::after{content:"";position:absolute;top:0;bottom:6px;width:28px;pointer-events:none;z-index:2}.hwrap::before{left:0;background:linear-gradient(90deg,var(--ivory),transparent)}.hwrap::after{right:0;background:linear-gradient(270deg,var(--ivory),transparent)}.hwrap.atstart::before,.hwrap.atend::after{display:none}
 .hscroll{display:flex;gap:10px;overflow-x:auto;margin:0 -20px;padding:2px 20px 6px;scrollbar-width:none}.hscroll::-webkit-scrollbar{display:none}
 .mini{flex-shrink:0;width:118px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;font:inherit;color:var(--ink);text-align:center}.mini b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .hero{width:100%;display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;font:inherit;color:var(--ink);text-align:left}
@@ -177,6 +180,9 @@ input[type=range]{width:100%;accent-color:var(--green)}
  body:not(.phone-mode) .toast{left:50%;right:auto;transform:translateX(-50%);min-width:360px;bottom:32px}
  body:not(.phone-mode) .rolesw{top:16px}
  body:not(.phone-mode) .hscroll{margin:0;padding:2px 0 6px}
+ body:not(.phone-mode) .hwrap{margin:0 auto}
+ body:not(.phone-mode) .hwrap .hscroll{padding:2px 2px 6px}
+ body:not(.phone-mode) .harr.prev{left:-14px}body:not(.phone-mode) .harr.next{right:-14px}
  body:not(.phone-mode) .greet{height:300px!important}
  body:not(.phone-mode) .bub2{max-width:70%}
  body:not(.phone-mode) h2{font-size:30px}
