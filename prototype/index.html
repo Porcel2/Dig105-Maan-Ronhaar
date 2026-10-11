@@ -235,7 +235,7 @@ const LEVELS=["A2","B1","B2","C1","Native"];
 const TRADES={Plumbing:["Leaks","Boilers","Taps and mixers","Bathroom fittings","Radiators","Drains","Washing machines"],Electrical:["Sockets","Lighting","Fuse boards","EV chargers","Safety checks","Appliances"],Painting:["Interior walls","Ceilings","Wall prep","Exterior","Wallpaper","Colour advice"]};
 
 const blank=()=>({role:null,name:"",email:"",phone:"",password:"",terms:false,tips:false,langs:{},address:"",homeType:"Rented flat",landlord:false,
-  entity:"Sole trader (FIE)",trade:"Plumbing",jobs:[],rate:"",areas:"",licence:"",docType:"ID card",docs:{},payout:"Weekly payout",iban:"",holder:"",otpOk:false,loggedIn:false});
+  entity:"Sole trader (FIE)",trade:"Plumbing",jobs:[],rate:"",areas:"",licence:"",docType:"ID card",docs:{},payout:"Weekly payout",iban:"",holder:"",vat:"",llName:"",llEmail:"",llPhone:"",llCompany:"",otpOk:false,loggedIn:false});
 let S=blank();
 try{const s=localStorage.getItem("kodu.proto");if(s)S=Object.assign(blank(),JSON.parse(s))}catch(e){}
 const save=()=>{try{localStorage.setItem("kodu.proto",JSON.stringify(S))}catch(e){}};
@@ -253,6 +253,7 @@ const chips=(k,items,sel,multi)=>`<div class="row wrap">${items.map(i=>`<button 
 const esc=s=>String(s).replace(/</g,"&lt;");
 
 const V={
+  llName:v=>v.trim()?"":"Enter your landlord's name",
   email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?"":"Enter a full email address, for example name@domain.com",
   phone:v=>/^\+?[\d\s]{7,}$/.test(v)?"":"Enter a phone number with country code",
   password:v=>v.length<8?"Use at least 8 characters":!/\d/.test(v)?"Add one number to make it stronger":"",
@@ -311,11 +312,16 @@ ${err.langs?`<span class="errt">${err.langs}</span>`:""}
 ${pr?`<div class="note">${ico("globe","#16201D",16)}<span>A short voice sample helps expats hear your English before they book. Optional, 20 seconds.</span></div>`:`<p class="muted">App language follows your first language. Change it anytime in Settings.</p>`}
 <div class="foot"><button class="btn p" data-act="langsNext">Continue</button></div>`},
 
-home:()=>`${bar(4,4)}${head("Where is home?","Only the district is shown to providers until you book.")}
+home:()=>`${bar(4,S.landlord?5:4)}${head("Where is home?","Only the district is shown to providers until you book.")}
 <form data-form="home" class="col" style="gap:14px">${field("address","Address","Street, district, Tallinn","text",'autocomplete="street-address"')}
 <div style="height:140px;border-radius:18px;background:#DCE6E0;position:relative;overflow:hidden"><span style="position:absolute;left:50%;top:40px;transform:translateX(-50%)">${ico("pin","#0E5A4C",36)}</span></div>
 <div class="col"><span class="muted" style="font-weight:700">I live in a</span>${chips("homeType",["Rented flat","Owned flat","House","Shared"],S.homeType)}</div>
-<div class="row between" style="font-size:15px"><span>Landlord arranges repairs</span><button type="button" class="tog ${S.landlord?"on":""}" data-tog="landlord" role="switch" aria-checked="${S.landlord}" aria-label="Landlord arranges repairs"></button></div>
+<div class="row between" style="font-size:15px"><span>Landlord arranges repairs</span><button type="button" class="tog ${S.landlord?"on":""}" data-tog="landlord" role="switch" aria-checked="${S.landlord}" aria-label="Landlord arranges repairs"></button></div>${S.landlord?`<p class="muted">Next we ask for your landlord's contact so quotes can be sent to them for approval.</p>`:""}
+<div class="foot"><button class="btn p" type="submit">${S.landlord?"Continue":"Finish and find help"}</button><p class="center"><button type="button" class="link" data-act="skipHome">Skip for now</button></p></div></form>`,
+
+landlord:()=>`${bar(5,5)}${head("Who is your landlord?","Kodu sends them each quote to approve before any work starts, and they can pay directly if you agree.")}
+<form data-form="landlord" class="col" style="gap:14px">${field("llName","Landlord or agency name","Name")}${field("llEmail","Email","landlord@domain.com","email")}${field("llPhone","Phone (optional)","+372 …","tel")}${field("llCompany","Company or registry code (optional)","Stay Larsen OÜ")}
+<div class="note">${ico("shield","#16201D",16)}<span>Your landlord only sees the job, the quote and the provider's profile. They never see your chat.</span></div>
 <div class="foot"><button class="btn p" type="submit">Finish and find help</button><p class="center"><button type="button" class="link" data-act="skipHome">Skip for now</button></p></div></form>`,
 
 trade:()=>`${bar(3,6)}${head("What do you do?","Pick your main trade and the jobs you take.")}
@@ -329,6 +335,7 @@ verify:()=>`${bar(5,6)}${head("Verify your identity","Required before you can ta
 <div class="col"><span class="muted" style="font-weight:700">ID document</span>${chips("docType",["ID card","Passport","Residence permit"],S.docType)}</div>
 <div class="row">${["Front","Back","Selfie"].map(d=>`<button type="button" class="photo ${S.docs[d]?"done":""}" data-doc="${d}">${S.docs[d]?ico("check","#fff",22):ico("plus","#56605C",20)}${d}</button>`).join("")}</div>
 <div class="col"><span class="muted" style="font-weight:700">Proof of qualification</span><button type="button" class="photo ${S.docs.Licence?"done":""}" data-doc="Licence">${S.docs.Licence?ico("check","#fff",22):ico("plus","#56605C",20)}Licence photo</button></div>
+<form data-form="vat" class="col" style="gap:6px">${field("vat",S.entity==="Company (OÜ)"?"VAT number (KMKR)":"VAT number (KMKR), optional for sole traders","EE123456789")}<span class="muted">Estonian VAT numbers start with EE and have nine digits. Shown on your invoices and receipts.</span></form>
 ${err.docs?`<span class="errt">${err.docs}</span>`:""}
 <div class="note">${ico("lock","#16201D",16)}<span>Documents are deleted after the check. Verified ID and Licensed badges appear on your profile within 24 h.</span></div>
 <div class="foot"><button class="btn p" data-act="submitDocs">Submit for verification</button></div>`,
@@ -360,14 +367,16 @@ function render(){
 let cdT;function countdown(){clearInterval(cdT);let n=30;cdT=setInterval(()=>{n--;const el=document.getElementById("cd");if(!el){clearInterval(cdT);return}el.textContent="0:"+String(Math.max(n,0)).padStart(2,"0");if(n<=0){el.parentElement.innerHTML='<button class="link" data-act="resend">Resend code</button>';clearInterval(cdT)}},1000)}
 
 const SAMPLE={expat:{name:"Sofia Ramírez",email:"sofia.ramirez@gmail.com",phone:"+372 5555 0418",password:"kodu2026",terms:true,langs:{ES:"Native",EN:"C1",ET:"A2"},address:"Narva mnt 7, Kesklinn, Tallinn",homeType:"Rented flat"},
-  provider:{name:"Mart Kask",email:"mart.kask@gmail.com",phone:"+372 5555 0902",password:"kodu2026",terms:true,langs:{ET:"Native",EN:"C1",RU:"B2"},trade:"Plumbing",jobs:["Leaks","Boilers","Taps and mixers"],rate:"38",areas:"Kesklinn, Kalamaja",licence:"EHR 1182 2306",docs:{Front:true,Back:true,Selfie:true,Licence:true},holder:"Mart Kask",iban:"EE38 2200 2210 2014 5685"}};
+  expatLandlord:{llName:"Stay Larsen",llEmail:"office@larsen.ee",llPhone:"+372 600 1234",llCompany:"Stay Larsen OÜ"},
+  provider:{name:"Mart Kask",email:"mart.kask@gmail.com",phone:"+372 5555 0902",password:"kodu2026",terms:true,langs:{ET:"Native",EN:"C1",RU:"B2"},trade:"Plumbing",jobs:["Leaks","Boilers","Taps and mixers"],rate:"38",areas:"Kesklinn, Kalamaja",licence:"EHR 1182 2306",docs:{Front:true,Back:true,Selfie:true,Licence:true},vat:"EE102345678",holder:"Mart Kask",iban:"EE38 2200 2210 2014 5685"}};
 function skipStep(){
   if(route==="book"){S.draft.title=S.draft.title||"Leaking kitchen tap";S.draft.desc=S.draft.desc||"Dripping for a week, the cupboard under the sink is wet.";S.draft["Photo 1"]=true;save();toast("Filled with sample data");go("slots");return}
   if(route==="slots"){const p=find(S.view);const d=Object.keys(p.slots)[0];S.draft.day=d;S.draft.slot=p.slots[d][0];save();document.querySelector("[data-act=sendRequest]").click();return}
   if(!S.role)S.role="expat";
   const smp=SAMPLE[S.role];Object.keys(smp).forEach(k=>{const empty=S[k]===""||S[k]===false||(typeof S[k]==="object"&&S[k]&&!Object.keys(S[k]).length);if(empty||S[k]==null)S[k]=JSON.parse(JSON.stringify(smp[k]))});
   S.otpOk=true;
-  const next={role:"account",account:"otp",otp:S.role==="provider"?"trade":"langs",trade:"langs",langs:S.role==="provider"?"verify":"home",home:"ehome",verify:"payout",payout:"pdone"}[route];
+  if(route==="landlord"){Object.assign(S,SAMPLE.expatLandlord)}
+  const next={role:"account",account:"otp",otp:S.role==="provider"?"trade":"langs",trade:"langs",langs:S.role==="provider"?"verify":"home",home:S.landlord?"landlord":"ehome",landlord:"ehome",verify:"payout",payout:"pdone"}[route];
   if(next==="ehome"||next==="pdone")S.loggedIn=true;
   save();toast("Filled with sample data");go(next||"welcome");
 }
@@ -402,7 +411,7 @@ document.addEventListener("click",e=>{
   if(a==="resend"){toast("New code sent");countdown();render();return}
   if(a==="langsNext"){if(!Object.keys(S.langs).length){err={langs:"Add at least one language"};render();return}if(S.loggedIn){save();goBack();return}go(S.role==="provider"?"verify":"home");return}
   if(a==="skipHome"){S.loggedIn=true;save();go("edone");return}
-  if(a==="submitDocs"){if(!(S.docs.Front&&S.docs.Back&&S.docs.Selfie)){err={docs:"Add front, back and a selfie to continue"};render();return}if(S.loggedIn){goBack();return}go("payout");return}
+  if(a==="submitDocs"){const vf=document.querySelector("form[data-form=vat]");if(vf)readForm(vf);err={};if(!(S.docs.Front&&S.docs.Back&&S.docs.Selfie))err.docs="Add front, back and a selfie to continue";if(S.vat&&!/^EE\d{9}$/.test(S.vat.replace(/\s+/g,"").toUpperCase()))err.vat="Enter a valid number, EE followed by nine digits";if(S.entity==="Company (OÜ)"&&!S.vat)err.vat="Companies need a VAT number";if(err.docs||err.vat){render();return}S.vat=S.vat.replace(/\s+/g,"").toUpperCase();if(S.loggedIn){goBack();return}go("payout");return}
   if(a==="soon"){toast("That screen is built next");return}
   if(a==="skip"){skipStep();return}
   if(a==="logout"){try{localStorage.removeItem("kodu.proto."+S.role)}catch(e){}S=blank();save();history=[];go("welcome");return}
@@ -411,7 +420,8 @@ document.addEventListener("submit",e=>{
   e.preventDefault();const f=e.target;readForm(f);const k=f.dataset.form;
   if(k==="login"){if(!validate(["email","password"])){render();return}S.loggedIn=true;save();toast("Logged in as "+S.email);go(S.role==="provider"?"phome":"ehome");return}
   if(k==="account"){const ok=validate(["name","email","phone","password"]);if(!S.terms)err.terms="You need to accept the terms to continue";if(!ok||err.terms){render();return}save();go("otp");return}
-  if(k==="home"){if(!validate(["address"])){render();return}S.loggedIn=true;save();go("edone");return}
+  if(k==="home"){if(!validate(["address"])){render();return}if(S.landlord){save();go("landlord");return}S.loggedIn=true;save();go("ehome");return}
+  if(k==="landlord"){const ok=validate(["llName"]);if(!S.llEmail&&!S.llPhone)err.llEmail="Add an email or a phone number";else if(S.llEmail&&V.email(S.llEmail))err.llEmail=V.email(S.llEmail);if(!ok||err.llEmail){render();return}S.loggedIn=true;save();toast("Landlord added");go("ehome");return}
   if(k==="trade"){const ok=validate(["rate","areas","licence"]);if(!S.jobs.length)err.jobs="Pick at least one job";if(!ok||err.jobs){render();return}save();if(S.loggedIn){goBack();return}go("langs");return}
   if(k==="payout"){if(!validate(["holder","iban"])){render();return}if(S.loggedIn){save();goBack();return}S.loggedIn=true;save();go("pdone");return}
 });
@@ -540,6 +550,7 @@ book:()=>{const p=find(S.view);const d=S.draft;return `${bar(1,3)}${head("Descri
 <label class="f"><span class="l">Details</span><textarea name="desc" class="ta" placeholder="When it started, where it is, anything you have tried. Write in ${LNAME[myLang()]}, ${p.name.split(" ")[0]} reads it in ${LNAME[native(p)]}.">${esc(d.desc||"")}</textarea></label>
 <div class="col"><span class="muted" style="font-weight:700">Photos</span><div class="row">${["Photo 1","Photo 2"].map(k=>`<button type="button" class="photo ${d[k]?"done":""}" data-dphoto="${k}">${d[k]?ico("check","#fff",22):ico("plus","#56605C",20)}${d[k]?"Added":"Add photo"}</button>`).join("")}</div></div>
 <div class="col"><span class="muted" style="font-weight:700">Urgency</span>${chips("urgency",["Flexible","This week","Urgent"],S.urgency||"This week")}</div>
+${S.landlord&&S.llName?`<div class="note">${ico("shield","#16201D",16)}<span>The quote is also sent to ${esc(S.llName)} for approval, since your landlord arranges repairs.</span></div>`:""}
 <div class="note">${ico("pin","#16201D",16)}<span>${p.name.split(" ")[0]} sees your district (${((S.address||"Kesklinn").split(",")[1]||"Kesklinn").trim()}) now and the full address once you pay.</span></div>
 <div class="foot"><button class="btn p" type="submit">Choose a time</button></div></form>`},
 
@@ -589,7 +600,7 @@ chat:()=>{ensure();const p=find(S.view);const c=S.chats[p.id];c.unread=0;const p
 <div style="height:12px"></div><form data-form="msg" class="cta" style="gap:8px"><button type="button" class="ib" data-act="attach" aria-label="Attach photo">${ico("plus","#16201D",20)}</button><div class="in" style="flex:1;border-radius:22px;height:44px"><input name="msg" placeholder="Write in ${LNAME[myLang()]}…" autocomplete="off"></div><button class="ib" type="submit" style="background:var(--green);border:none" aria-label="Send">${ico("send","#fff",20)}</button></form>`},
 
 me:()=>{ensure();return `${topbar()}<div class="row" style="gap:14px"><span style="width:64px;height:64px;border-radius:32px;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:700;font-size:22px">${(S.name||"S R").split(" ").map(x=>x[0]).join("").slice(0,2)}</span><span><h2 style="font-size:22px">${esc(S.name||"Sofia Ramírez")}</h2><span class="muted">${esc(S.email||"")}</span><span class="row wrap" style="gap:6px;margin-top:6px">${Object.entries(S.langs).map(lchip).join("")}</span></span></div>
-<div class="card" style="padding:4px 16px">${[["globe","Language and translation",`App in ${LNAME[myLang()]}, chat translated`],["pin","Home",esc(S.address||"Not set")],["lock","Payment methods","Visa ending 4421"],["shield","Verification","Email and phone confirmed"],["star","Saved providers",S.saved.length+" saved"],["user","Privacy and data","Download or delete your data"]].map(([i,t,s])=>`<button class="row" style="gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;width:100%;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left" data-act="soon"><span class="eic" style="width:40px;height:40px;border-radius:12px">${ico(i,"#16201D",20)}</span><span style="flex:1"><b style="font-size:16px;font-weight:500">${t}</b><span class="muted" style="display:block">${s}</span></span><span style="display:inline-flex;transform:rotate(180deg)">${ico("back","#56605C",18)}</span></button>`).join("")}</div>
+<div class="card" style="padding:4px 16px">${[["globe","Language and translation",`App in ${LNAME[myLang()]}, chat translated`],["pin","Home",esc(S.address||"Not set")+(S.landlord?"  ·  Landlord: "+esc(S.llName||"not added"):"")],["lock","Payment methods","Visa ending 4421"],["shield","Verification","Email and phone confirmed"],["star","Saved providers",S.saved.length+" saved"],["user","Privacy and data","Download or delete your data"]].map(([i,t,s])=>`<button class="row" style="gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;width:100%;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left" data-act="soon"><span class="eic" style="width:40px;height:40px;border-radius:12px">${ico(i,"#16201D",20)}</span><span style="flex:1"><b style="font-size:16px;font-weight:500">${t}</b><span class="muted" style="display:block">${s}</span></span><span style="display:inline-flex;transform:rotate(180deg)">${ico("back","#56605C",18)}</span></button>`).join("")}</div>
 <div class="row between" style="font-size:15px"><span>Show originals under translations</span><button class="tog ${S.showOrig===false?"":"on"}" data-act="togOrig" role="switch" aria-checked="${S.showOrig!==false}"></button></div>
 <button class="btn p" data-switch="provider">Switch to the provider app</button><button class="btn s" data-act="logout">Log out</button><p class="muted center">Kodu prototype  ·  v0.2</p>
 <div style="height:12px"></div>${nav("me")}`}
@@ -760,7 +771,7 @@ pme:()=>{pensure();return `${ptop()}<div class="row" style="gap:14px"><span styl
 <div class="card col"><div class="row between"><b>Pricing</b><div class="row" style="gap:6px"><button class="chip ${S.pricing==="hour"?"on":""}" data-pricing="hour">Hourly</button><button class="chip ${S.pricing==="job"?"on":""}" data-pricing="job">Per job</button></div></div>
 <form data-form="prate" class="row" style="gap:10px"><label class="f" style="flex:1"><span class="l">${S.pricing==="hour"?"Hourly rate":"Fixed price per job"}</span><div class="in"><input name="price" inputmode="decimal" value="${S.pricing==="hour"?pRate():S.jobPrice}"><span class="muted">€</span></div></label><button class="btn g sm" type="submit" style="height:52px;align-self:flex-end">Save</button></form></div>
 <div class="card col"><div class="row between"><b>Languages</b><button class="link" style="font-size:14px" data-go="langs">Edit</button></div><div class="row wrap" style="gap:6px">${Object.entries(S.langs).map(([c,l])=>`<span class="lc on"><b>${c}</b> <span>${l}</span></span>`).join("")}</div><span class="muted">Expats filter on these at B2 or better. Everything else is translated.</span></div>
-<div class="card" style="padding:4px 16px">${[["check","Trade and jobs",`${pTrade()}  ·  ${(S.jobs||[]).length||3} job types`,"trade"],["pin","Areas you cover",esc(S.areas||"Kesklinn, Kalamaja"),"trade"],["shield","Verification",S.verified?"ID and licence verified":"In review, usually 24 h","verify"],["lock","Payout",`${S.payout||"Weekly payout"}  ·  ${esc((S.iban||"EE38 2200 2210 2014 5685").slice(-4))}`,"payout"],["user","Privacy and data","Download or delete your data",""]].map(([i,t,s,g])=>`<button class="row" style="gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;width:100%;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left" ${g?`data-go="${g}"`:'data-act="soon"'}><span class="eic" style="width:40px;height:40px;border-radius:12px">${ico(i,"#16201D",20)}</span><span style="flex:1"><b style="font-size:16px;font-weight:500">${t}</b><span class="muted" style="display:block">${s}</span></span><span style="display:inline-flex;transform:rotate(180deg)">${ico("back","#56605C",18)}</span></button>`).join("")}</div>
+<div class="card" style="padding:4px 16px">${[["check","Trade and jobs",`${pTrade()}  ·  ${(S.jobs||[]).length||3} job types`,"trade"],["pin","Areas you cover",esc(S.areas||"Kesklinn, Kalamaja"),"trade"],["shield","Verification",(S.verified?"ID and licence verified":"In review, usually 24 h")+(S.vat?"  ·  VAT "+esc(S.vat):""),"verify"],["lock","Payout",`${S.payout||"Weekly payout"}  ·  ${esc((S.iban||"EE38 2200 2210 2014 5685").slice(-4))}`,"payout"],["user","Privacy and data","Download or delete your data",""]].map(([i,t,s,g])=>`<button class="row" style="gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;width:100%;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left" ${g?`data-go="${g}"`:'data-act="soon"'}><span class="eic" style="width:40px;height:40px;border-radius:12px">${ico(i,"#16201D",20)}</span><span style="flex:1"><b style="font-size:16px;font-weight:500">${t}</b><span class="muted" style="display:block">${s}</span></span><span style="display:inline-flex;transform:rotate(180deg)">${ico("back","#56605C",18)}</span></button>`).join("")}</div>
 <button class="btn p" data-switch="expat">Switch to the expat app</button><button class="btn s" data-act="pswitch">Preview my profile as an expat sees it</button>
 <button class="btn s" data-act="logout">Log out</button><p class="muted center">Kodu prototype  ·  provider v0.1</p>
 <div style="height:12px"></div>${pnav("pme")}`}
