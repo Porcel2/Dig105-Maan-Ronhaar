@@ -180,6 +180,39 @@ input[type=range]{width:100%;accent-color:var(--green)}
  body:not(.phone-mode) .bub2{max-width:70%}
  body:not(.phone-mode) h2{font-size:30px}
 }
+
+.dk{display:none}
+.lhero{display:flex;flex-direction:column;gap:18px}
+.herotext{display:flex;flex-direction:column;gap:18px;flex:1}
+.herofoot{margin-top:auto}
+@media (min-width:900px){
+ body:not(.phone-mode) .dk{display:flex}
+ body:not(.phone-mode) #phone.landing .screen{padding:28px 64px 0;gap:56px;background:linear-gradient(180deg,#F6F2EA 0,#F6F2EA 640px,#FBF9F5 640px)}
+ body:not(.phone-mode) #phone.landing .screen>*:not(.sheet):not(.sheetbg):not(.bnav){max-width:1120px}
+ body:not(.phone-mode) #phone.landing .foot{margin-top:0;padding-bottom:0}
+ body:not(.phone-mode) #phone.landing .lhero{flex-direction:row;align-items:center;gap:56px;min-height:520px}
+ body:not(.phone-mode) #phone.landing .greet{order:2;flex:1;height:480px!important;border-radius:36px;position:relative}
+ body:not(.phone-mode) #phone.landing .greet>svg{width:170px;height:174px}
+ body:not(.phone-mode) #phone.landing .herotext{flex:1.05;gap:22px}
+ body:not(.phone-mode) #phone.landing h1{font-size:54px;line-height:1.05}
+ body:not(.phone-mode) #phone.landing .herotext .sub{font-size:18px;max-width:520px}
+ body:not(.phone-mode) #phone.landing .herofoot{flex-direction:row;flex-wrap:wrap;align-items:center;gap:12px}
+ body:not(.phone-mode) #phone.landing .herofoot .btn{width:auto;padding:0 32px}
+ body:not(.phone-mode) #phone.landing .herofoot p{width:100%;text-align:left;margin:0}
+ .topnav{gap:22px;align-items:center;margin-right:10px}.topnav .link{color:var(--ink);font-weight:600;font-size:15px}
+ .eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+ .hcard{position:absolute;display:flex;gap:10px;align-items:center;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 10px 30px rgba(22,32,29,.12);animation:floaty 5s ease-in-out infinite}.hcard b{display:block;font-size:13px}.hcard small{font-size:11px;color:var(--muted)}
+ .hc1{left:28px;top:150px;animation-delay:.4s}.hc2{right:28px;top:280px;animation-delay:1.4s}.hc3{left:60px;bottom:40px;animation-delay:2.2s}
+ body:not(.phone-mode) #phone.landing .greet .bub{font-size:13px}
+ .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px 32px}.stats div{display:flex;flex-direction:column;gap:2px}.stats b{font-family:Sora,sans-serif;font-size:32px;letter-spacing:-.02em}.stats span{font-size:14px;color:var(--muted)}
+ section.dk{flex-direction:column;gap:24px}
+ .sechead{display:flex;flex-direction:column;gap:6px}.sechead h2{font-size:32px}
+ .three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.six{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+ .step{display:flex;flex-direction:column;gap:12px;padding:24px;position:relative}.step b{font-family:Sora,sans-serif;font-size:18px}.num{position:absolute;right:20px;top:16px;font-family:Sora,sans-serif;font-weight:700;color:#E4DED3;font-size:28px}
+ .quote{display:flex;flex-direction:column;gap:16px;padding:24px}.quote p{font-size:15px;line-height:1.5;color:var(--body);margin:0}
+ section.band{flex-direction:row;align-items:center;justify-content:space-between;gap:40px;background:var(--ink);border-radius:28px;padding:40px 44px}.band h2{font-size:28px;margin:6px 0 8px}.band>div{max-width:620px}
+ .foot2{flex-direction:row;justify-content:space-between;align-items:center;padding:24px 0 32px;border-top:1px solid var(--line)}
+}
 </style>
 </head>
 <body>
@@ -232,12 +265,19 @@ const V={
 function validate(keys){err={};keys.forEach(k=>{const e=V[k]?V[k](S[k]||""):"";if(e)err[k]=e});return Object.keys(err).length===0}
 
 const SCREENS={
-welcome:()=>`<div class="row between"><div class="row" style="gap:8px">${mark(28,"#F6F2EA")}<span style="font-family:Sora,sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em">kodu</span></div><button class="chip" style="height:40px" aria-label="Change language">${ico("globe","#16201D",18)} EN</button></div>
-<div class="greet wl">${mark(120,"#BFE3D6").replace("<path d=\"M48","<path class=\"kd\" pathLength=\"1\" d=\"M48").replace("<circle","<circle class=\"dt\"")}<span class="bub f1" style="left:22px;top:30px">Hello</span><span class="bub f2" style="right:26px;top:62px">Tere</span><span class="bub f3" style="left:34px;bottom:64px">Hola</span><span class="bub f4" style="right:22px;bottom:34px">Привет</span><span class="bub f5" style="left:150px;top:18px">Bonjour</span>
-</div>
-<div class="col" style="gap:10px"><h1>Local help, in <span class="rot"><span>your language.</span><span>tu idioma.</span><span>sinu keeles.</span><span>твоём языке.</span><span>deiner Sprache.</span></span></h1><p class="sub" style="font-size:16px">Book verified plumbers, electricians, painters, cleaners and movers who speak your language, or chat with anyone through live translation.</p></div>
+welcome:()=>`<div class="row between"><div class="row" style="gap:8px">${mark(28,"#F6F2EA")}<span style="font-family:Sora,sans-serif;font-weight:700;font-size:22px;letter-spacing:-.02em">kodu</span></div><div class="row" style="gap:8px"><nav class="dk topnav"><button class="link" data-scroll="how">How it works</button><button class="link" data-scroll="services">Services</button><button class="link" data-go="role" data-role="provider">For providers</button></nav><button class="chip" style="height:40px" aria-label="Change language">${ico("globe","#16201D",18)} EN</button><button class="dk btn p sm" style="height:40px" data-go="login">Log in</button></div></div>
+<div class="lhero">
+<div class="greet wl">${mark(120,"#BFE3D6").replace("<path d=\"M48","<path class=\"kd\" pathLength=\"1\" d=\"M48").replace("<circle","<circle class=\"dt\"")}<span class="bub f1" style="left:22px;top:30px">Hello</span><span class="bub f2" style="right:26px;top:62px">Tere</span><span class="bub f3" style="left:34px;bottom:64px">Hola</span><span class="bub f4" style="right:22px;bottom:34px">Привет</span><span class="bub f5" style="left:150px;top:18px">Bonjour</span><span class="dk hcard hc1">${ico("shield","#0E5A4C",16)}<span><b>Mart Kask</b><small>Verified plumber · 4.9</small></span></span><span class="dk hcard hc2">${ico("lock","#0E5A4C",16)}<span><b>€82.50 in escrow</b><small>Released when you confirm</small></span></span><span class="dk hcard hc3">${ico("globe","#0E5A4C",16)}<span><b>Translated ES ⇄ ET</b><small>Chat in your language</small></span></span></div>
+<div class="herotext"><span class="dk eyebrow">Home services for expats in Estonia</span><div class="col" style="gap:10px"><h1>Local help, in <span class="rot"><span>your language.</span><span>tu idioma.</span><span>sinu keeles.</span><span>твоём языке.</span><span>deiner Sprache.</span></span></h1><p class="sub" style="font-size:16px">Book verified plumbers, electricians, painters, cleaners and movers who speak your language, or chat with anyone through live translation.</p></div>
 <div class="row wrap" style="gap:8px"><span class="facepile"><span class="fp" style="background:#BFE3D6">MK</span><span class="fp" style="background:#F2C14E">OS</span><span class="fp" style="background:#D9643A;color:#fff">AR</span><span class="fp" style="background:#0E5A4C;color:#fff">AV</span><span class="fpt">414 providers ready</span></span><span class="chip" style="height:32px;font-size:13px">${ico("shield","#0E5A4C",15)}Verified ID</span><span class="chip" style="height:32px;font-size:13px">${ico("lock","#0E5A4C",15)}Pay into escrow</span><span class="chip" style="height:32px;font-size:13px">${ico("globe","#0E5A4C",15)}16 languages</span><span class="chip" style="height:32px;font-size:13px">${ico("pin","#0E5A4C",15)}10 cities</span></div>
-<div class="foot"><button class="btn p" data-go="role" data-role="expat">Find a service</button><button class="btn s" data-go="role" data-role="provider">I offer services</button><p class="center" style="font-size:15px;color:var(--body)">Already have an account? <button class="link" data-go="login">Log in</button></p></div>`,
+<div class="foot herofoot"><button class="btn p" data-go="role" data-role="expat">Find a service</button><button class="btn s" data-go="role" data-role="provider">I offer services</button><p class="center" style="font-size:15px;color:var(--body)">Already have an account? <button class="link" data-go="login">Log in</button></p></div></div>
+</div>
+<div class="dk stats">${[["414","verified providers"],["10","Estonian cities"],["16","languages spoken"],["4.8","average rating from expats"]].map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>
+<section class="dk" id="how"><div class="sechead"><span class="eyebrow">How it works</span><h2>Three steps from problem to fixed</h2></div><div class="three">${[["search","Search by language","Filter providers by the languages they speak, their district, price and availability. Every profile shows reviews from other expats."],["chat","Get a written quote","Describe the job, pick a slot and chat in your own language. Kodu translates both ways and the provider sends a fixed quote."],["lock","Pay into escrow","Your money is held by Kodu until you confirm the work. The provider sees your address only after you pay."]].map(([i,t,d],n)=>`<div class="card step"><span class="num">0${n+1}</span><span class="eic" style="width:44px;height:44px;border-radius:14px">${ico(i,"#16201D",22)}</span><b>${t}</b><p class="sub" style="font-size:14px">${d}</p></div>`).join("")}</div></section>
+<section class="dk" id="services"><div class="sechead"><span class="eyebrow">Services</span><h2>Whatever your flat needs</h2></div><div class="six">${[["Plumbing","home","#BFE3D6","from €30/h"],["Electrical","check","#F2C14E","from €34/h"],["Painting","star","#E4DED3","from €26/h"],["Cleaning","sparkle","#CBCADB","from €18/h"],["Handyman","wrench","#EBCECE","from €24/h"],["Moving","truck","#D9E6D0","from €28/h"]].map(([c,i,bg,pr])=>`<button class="cat" style="background:${bg};height:120px" data-go="role" data-role="expat">${ico(i,"#16201D",26)}<span><b style="display:block;font-size:15px">${c}</b><small style="font-weight:500;color:var(--body)">${pr}</small></span></button>`).join("")}</div></section>
+<section class="dk"><div class="sechead"><span class="eyebrow">From expats in Tallinn</span><h2>Booked, fixed, understood</h2></div><div class="three">${[["Sofia R.","Madrid → Kesklinn","ES","Fixed our kitchen leak the same day and explained every step. I wrote in Spanish, he read it in Estonian."],["Daniel K.","Berlin → Kalamaja","DE","Replaced the fuse board in one visit. Clear price before he came, no surprises after."],["Yuki T.","Osaka → Kadriorg","JA","The safety check report came in English with photos. Our landlord accepted it straight away."]].map(([n,f,l,q])=>`<div class="card quote"><p>“${q}”</p><div class="row" style="gap:10px"><span class="fp" style="width:36px;height:36px;border-radius:18px;font-size:13px;background:var(--mint);margin:0">${n.split(" ").map(x=>x[0]).join("")}</span><span><b style="display:block;font-size:14px">${n}</b><small class="muted">${f}</small></span><span class="lc on" style="margin-left:auto"><b>${l}</b></span></div></div>`).join("")}</div></section>
+<section class="dk band"><div><span class="eyebrow" style="color:var(--mint)">For providers</span><h2 style="color:#fff">Tradesperson? Get expat customers who pay on time.</h2><p style="color:rgba(255,255,255,.75);font-size:15px">Requests arrive translated, quotes are fixed before you start, and every job is paid into escrow before you leave the house.</p></div><button class="btn" style="background:var(--mint);color:var(--ink);width:auto;padding:0 28px" data-go="role" data-role="provider">Start offering services</button></section>
+<footer class="dk foot2"><div class="row" style="gap:8px">${mark(22,"#F6F2EA")}<b style="font-family:Sora,sans-serif">kodu</b><span class="muted">· Tallinn, Estonia · © 2026</span></div><div class="row" style="gap:18px" ><button class="link muted" data-act="soon">Privacy</button><button class="link muted" data-act="soon">Terms</button><button class="link muted" data-act="soon">Provider agreement</button><button class="link muted" data-act="soon">Contact</button></div></footer>`,
 
 login:()=>`${bar()}${head("Welcome back","Log in to see your bookings and chats.")}
 <div class="row"><button class="social" data-act="social">Apple</button><button class="social" data-act="social"><span style="font-family:Sora,sans-serif;font-weight:700">G</span>Google</button></div><div class="divider">or with email</div>
@@ -311,7 +351,7 @@ edone:()=>`<div class="col center" style="margin:auto;width:100%"><div style="wi
 function render(){
   const ph=document.getElementById("phone");
   const old=ph.querySelector(".screen");const top=old?old.scrollTop:0;if(old)old.remove();ph.insertAdjacentHTML("beforeend",`<div class="screen ${anim?(dir==="back"?"back":"fwd"):"still"}" id="scr">${SCREENS[route]()}</div>`);if(!anim)ph.querySelector(".screen").scrollTop=top;anim=false;
-  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
+  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));ph.classList.toggle("landing",route==="welcome");document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
   const first=ph.querySelector(".in.err input, .otp input");if(first&&route==="otp")first.focus();
   if(route==="otp")countdown();
 }
@@ -339,9 +379,10 @@ function switchRole(to){
 function readForm(form){form.querySelectorAll("input[name]").forEach(i=>{if(i.type==="checkbox")S[i.name]=i.checked;else S[i.name]=i.value})}
 
 document.addEventListener("click",e=>{
-  const t=e.target.closest("[data-switch],[data-go],[data-role],[data-act],[data-chip],[data-lang],[data-lvl],[data-tog],[data-doc],[data-dev]");if(!t)return;
+  const t=e.target.closest("[data-switch],[data-scroll],[data-go],[data-role],[data-act],[data-chip],[data-lang],[data-lvl],[data-tog],[data-doc],[data-dev]");if(!t)return;
   const form=t.closest("form");if(form)readForm(form);
   if(t.dataset.switch){switchRole(t.dataset.switch);return}
+  if(t.dataset.scroll){const el=document.getElementById(t.dataset.scroll);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});return}
   if(t.dataset.dev==="phone"){document.body.classList.toggle("phone-mode");t.textContent=document.body.classList.contains("phone-mode")?"Desktop layout":"Phone frame";fit();return}
   if(t.dataset.dev){if(t.dataset.dev==="reset"){try{localStorage.removeItem("kodu.proto.expat");localStorage.removeItem("kodu.proto.provider")}catch(e){}S=blank();save();history=[];go("welcome")}return}
   if(t.dataset.role){S.role=t.dataset.role;save();if(route==="welcome"){go("account")}else render();return}
