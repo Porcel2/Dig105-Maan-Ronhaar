@@ -1,40 +1,48 @@
-# Kodu
+# Kodu - DIG105
 
-Kodu (Estonian for home) is a marketplace that connects expats in Estonia with verified local service providers who speak their language. Expats find plumbers, electricians, painters, cleaners, handymen and movers, chat with automatic translation, and pay into escrow that is released once the job is confirmed. Providers get requests, send quotes, manage availability and get paid out weekly or instantly.
+Kodu (Estonian for home) connects expats in Estonia with verified local service providers who speak their language. Expats find plumbers, electricians, painters, cleaners, handymen and movers, chat with automatic translation, and pay into escrow that is released once the job is confirmed. Providers receive translated requests, send fixed quotes, manage availability and get paid out weekly or instantly.
 
-This repository holds the course project for DIG105 by Maan Ronhaar.
+## Overview
+* **Tagline:** Local help, in your language. Book verified tradespeople in Estonia and chat with them in your own language.
+* **Target Audience:** Expats, exchange students and foreign workers living in Estonian cities who rent or own a home and cannot deal with tradespeople in Estonian. Second audience: local providers who want reliable, prepaid expat customers.
+* **Deployed App:** [Kodu clickable prototype](https://claude.ai/artifact/WMzbsRoT7fXTweao6BAQvq) (also runnable offline from [`prototype/index.html`](./prototype/index.html))
+
+## Team Members
+* **Partner A:** Maan Ronhaar (@Porcel2) - Documentation & Media
+* **Partner B:** Maan Ronhaar (@Porcel2) - Tech & User Research
+
+This project is carried out individually, so both roles and both task branches are handled by the same person.
+
+## Folder Navigation
+* [/video-diaries/](./video-diaries/) - Video sprint entries & PPP logs
+* [/miro-boards/](./miro-boards/) - Visual planning & UI designs
+* [/documentation/](./documentation/) - Research notes & user test logs
+* [/prototype/](./prototype/) - Prototype source, built app and provider dataset
+* [/tools/](./tools/) - Data generator and build script
 
 ## Prototype
+The prototype was built with Claude (Claude Code and the Claude Design canvas) instead of Lovable.ai. It is a single self contained HTML file covering both sides of the product.
 
-`prototype/index.html` is a single file, clickable prototype of both sides of the app. Open it in a browser or on a phone.
+Expat side: welcome and landing page, log in, registration with languages and home (including a landlord contact step), home, search with filters (category, city and district, language, pricing, date and time, rating, verification), provider profile, request and quote, escrow payment, translated chat, bookings, reviews and profile.
 
-Expat side: welcome, log in, registration, home, search with filters (category, city and district, language, pricing, date and time, rating), provider profile, request and quote, escrow payment, translated chat, bookings, reviews and profile.
+Provider side: registration with trade, languages, identity and VAT verification and payout, home with incoming requests, jobs with calendar and availability, quoting, translated chat, earnings and payouts, profile.
 
-Provider side: registration with verification and payout, home with requests, jobs with a calendar and availability, quoting, translated chat, earnings and payouts, profile.
+Every registration step has a Skip that fills sample data, and an Expat | Provider switch at the top of the app jumps between the two sides for demos. The app works as a phone app on narrow screens and as a desktop web app with sidebar navigation on wide screens.
 
-Every registration step has a Skip that fills sample data. Once logged in, the Expat | Provider switch at the top of the phone jumps between the two apps and keeps each side's state. Reset all under the phone clears everything.
+## Requirements (MoSCoW)
+**Must have.** As a provider, I want to receive job requests and reply with a fixed quote, so that I win expat customers without phone calls I cannot follow.
+**Should have.** As a provider, I want a calendar of my booked and requested jobs, so that I never double book a day.
+**Could have.** As a provider, I want to choose weekly or instant payouts, so that I control when my money arrives.
+**Won't have this round.** As a provider, I want Kodu to generate and send my invoices automatically, so that I skip accounting work.
 
-## Structure
+Acceptance criteria for each are on the Miro requirements frame, linked from [/miro-boards/](./miro-boards/).
 
-```
-prototype/index.html        built, self contained app
-prototype/src/shell.html    styles, shared screens, onboarding
-prototype/src/expat.js      expat screens and sample providers
-prototype/src/provider.js   provider screens and scripted customers
-prototype/data/providers.json   414 fictional providers across ten Estonian cities
-tools/gen_providers.py      regenerates providers.json
-tools/build.py              rebuilds prototype/index.html from src
-```
+## Technology Notes
+* Prototype: vanilla HTML, CSS and JavaScript in one file, no framework, no backend. State is kept in the browser so flows survive a refresh.
+* Data: 414 fictional providers across ten Estonian cities, generated by `tools/gen_providers.py` into `prototype/data/providers.json`.
+* Build: `python3 tools/build.py` assembles `prototype/index.html` from `prototype/src/`.
+* Design: logo system, app icons, splash screens, component library and screen mockups on the Claude Design canvas.
+* Brand: Mint `#BFE3D6`, Ink `#16201D`, Terracotta `#D9643A`, Deep green `#0E5A4C`, Ivory `#F6F2EA`. Sora for headings, DM Sans for body.
+* Tools used: Claude, Claude Design, Miro, Realtime Colors, GitHub, OBS and CapCut for the video diaries.
 
-Rebuild after editing the sources:
-
-```
-python3 tools/gen_providers.py   # optional, regenerates the provider data
-python3 tools/build.py
-```
-
-## Brand
-
-Mint `#BFE3D6`, Ink `#16201D`, Terracotta `#D9643A`, Deep green `#0E5A4C`, Ivory `#F6F2EA`. Headings in Sora, body in DM Sans. The logo system, app icons, splash screens, component library and screen mockups live on the Claude Design canvas linked in the project notes.
-
-All names, reviews and numbers in the prototype are fictional.
+All names, reviews and figures in the prototype are fictional.
