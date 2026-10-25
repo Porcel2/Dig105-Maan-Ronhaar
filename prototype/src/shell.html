@@ -248,6 +248,14 @@ input[type=range]{width:100%;accent-color:var(--green)}
 .legaldoc table{width:100%;border-collapse:collapse;margin:6px 0 12px;font-size:13px}.legaldoc th,.legaldoc td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid #EDE8DF}.legaldoc th{color:var(--ink)}
 .legaldoc strong{color:var(--ink)}
 @media (min-width:900px){body:not(.phone-mode) .legaldoc{padding:36px 44px;font-size:15px}body:not(.phone-mode) #phone.legalview .screen>*:not(.sheet):not(.sheetbg):not(.bnav){max-width:780px}body:not(.phone-mode) .lchips{margin:0 auto!important;padding:0!important;flex-wrap:wrap}body:not(.phone-mode) .legaldoc h2{font-size:18px}body:not(.phone-mode) .legaldoc h1{font-size:30px}}
+
+.pill.err{background:#F9DED3;color:#9C3517}
+.qr{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px}.qr::-webkit-scrollbar{display:none}.qr .chip{height:32px;font-size:13px;flex-shrink:0}
+@media (min-width:900px){body:not(.phone-mode) .chatmain .qr{margin:0;padding:8px 0 0}}
+.cookie{position:absolute;left:12px;right:12px;bottom:12px;z-index:60;background:var(--ink);color:#fff;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 16px 40px rgba(22,32,29,.3);font-size:14px;line-height:1.45}
+.cookie .link{color:var(--mint)}
+.cookie .row .btn{height:44px;font-size:15px}
+@media (min-width:900px){body:not(.phone-mode) .cookie{position:fixed;left:auto;right:24px;bottom:24px;width:420px}}
 </style>
 </head>
 <body>
@@ -258,7 +266,7 @@ const I = {
   back:'<path d="M15 5l-7 7 7 7"/>',check:'<path d="M5 12l5 5 9-10"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
   home:'<path d="M4 11l8-7 8 7v9H4z"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   pin:'<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',plus:'<path d="M12 5v14M5 12h14"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
-  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',star:'<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1.1 6.3L12 17.5 6.4 20.4l1.1-6.3L3 9.7l6.2-.9z"/>',send:'<path d="M4 12l16-8-6 16-2-6z"/>',sparkle:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><path d="M19 15l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/>',wrench:'<path d="M14 6a4 4 0 0 0 5 5l-9 9-3-3 9-9a4 4 0 0 0-2-2z"/><path d="M4 20l3-3"/>',truck:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>'
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',filter:'<path d="M4 6h16M7 12h10M10 18h4"/>',calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',star:'<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1.1 6.3L12 17.5 6.4 20.4l1.1-6.3L3 9.7l6.2-.9z"/>',send:'<path d="M4 12l16-8-6 16-2-6z"/>',flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',sparkle:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><path d="M19 15l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/>',wrench:'<path d="M14 6a4 4 0 0 0 5 5l-9 9-3-3 9-9a4 4 0 0 0-2-2z"/><path d="M4 20l3-3"/>',truck:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>'
 };
 const ico=(n,c='currentColor',s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
 const mark=(h,cut)=>`<svg width="${Math.round(h*88/90)}" height="${h}" viewBox="16 16 88 90" aria-hidden="true"><path d="M20 54 L60 20 L100 54 V102 H20Z" fill="#16201D" stroke="#16201D" stroke-width="7" stroke-linejoin="round"/><path d="M48 46 V94 M76 48 L52 70 L76 92" fill="none" stroke="${cut}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="60" cy="40" r="4.5" fill="#D9643A"/></svg>`;
@@ -393,7 +401,7 @@ edone:()=>`<div class="col center" style="margin:auto;width:100%"><div style="wi
 function render(){
   const ph=document.getElementById("phone");
   const old=ph.querySelector(".screen");const top=old?old.scrollTop:0;if(old)old.remove();ph.insertAdjacentHTML("beforeend",`<div class="screen ${anim?(dir==="back"?"back":"fwd"):"still"}" id="scr">${SCREENS[route]()}</div>`);if(!anim)ph.querySelector(".screen").scrollTop=top;anim=false;
-  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));ph.classList.toggle("landing",route==="welcome");ph.classList.toggle("chatview",route==="chat"||route==="pchat");ph.classList.toggle("legalview",route==="legal");const mm=ph.querySelector(".msgs");if(mm)mm.scrollTop=mm.scrollHeight;document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
+  ph.classList.toggle("withnav",!!ph.querySelector(".bnav"));let ck=null;try{ck=localStorage.getItem("kodu.cookie")}catch(e){}const cb=ph.querySelector(".cookie");if(!ck&&!cb&&route!=="legal"){ph.insertAdjacentHTML("beforeend",`<div class="cookie" role="dialog" aria-label="Cookie choice"><span><b>Cookies on Kodu.</b> We use necessary cookies to keep you logged in, and analytics only if you agree. <button class="link" data-legal="cookies">Cookie Policy</button></span><div class="row" style="gap:8px"><button class="btn s" style="flex:1;border-color:#fff;color:#fff" data-cookie="no">Only necessary</button><button class="btn" style="flex:1;background:var(--mint);color:var(--ink)" data-cookie="yes">Accept all</button></div></div>`)}else if((ck||route==="legal")&&cb)cb.remove();ph.classList.toggle("landing",route==="welcome");ph.classList.toggle("chatview",route==="chat"||route==="pchat");ph.classList.toggle("legalview",route==="legal");const mm=ph.querySelector(".msgs");if(mm)mm.scrollTop=mm.scrollHeight;document.querySelectorAll("[data-switch]").forEach(b=>b.classList.toggle("on",S.loggedIn&&S.role===b.dataset.switch));document.getElementById("rolesw").style.display=S.loggedIn?"flex":"none";
   const first=ph.querySelector(".in.err input, .otp input");if(first&&route==="otp")first.focus();
   if(route==="otp")countdown();
 }
@@ -423,12 +431,13 @@ function switchRole(to){
 function readForm(form){form.querySelectorAll("input[name]").forEach(i=>{if(i.type==="checkbox")S[i.name]=i.checked;else S[i.name]=i.value})}
 
 document.addEventListener("click",e=>{
-  const t=e.target.closest("[data-switch],[data-scroll],[data-go],[data-role],[data-act],[data-chip],[data-lang],[data-lvl],[data-tog],[data-doc],[data-dev]");if(!t)return;
+  const t=e.target.closest("[data-cookie],[data-switch],[data-scroll],[data-go],[data-role],[data-act],[data-chip],[data-lang],[data-lvl],[data-tog],[data-doc],[data-dev]");if(!t)return;
   const form=t.closest("form");if(form)readForm(form);
+  if(t.dataset.cookie){try{localStorage.setItem("kodu.cookie",t.dataset.cookie)}catch(e){}const c=document.querySelector(".cookie");if(c)c.remove();toast(t.dataset.cookie==="yes"?"Analytics cookies accepted":"Only necessary cookies");return}
   if(t.dataset.switch){switchRole(t.dataset.switch);return}
   if(t.dataset.scroll){const el=document.getElementById(t.dataset.scroll);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});return}
   if(t.dataset.dev==="phone"){document.body.classList.toggle("phone-mode");t.textContent=document.body.classList.contains("phone-mode")?"Desktop layout":"Phone frame";fit();return}
-  if(t.dataset.dev){if(t.dataset.dev==="reset"){try{localStorage.removeItem("kodu.proto.expat");localStorage.removeItem("kodu.proto.provider")}catch(e){}S=blank();save();history=[];go("welcome")}return}
+  if(t.dataset.dev){if(t.dataset.dev==="reset"){try{localStorage.removeItem("kodu.cookie");localStorage.removeItem("kodu.proto.expat");localStorage.removeItem("kodu.proto.provider")}catch(e){}S=blank();save();history=[];go("welcome")}return}
   if(t.dataset.role){S.role=t.dataset.role;save();if(route==="welcome"){go("account")}else render();return}
   if(t.dataset.go){if(t.dataset.go==="back")goBack();else go(t.dataset.go);return}
   if(t.dataset.chip){const k=t.dataset.chip,v=t.dataset.val;if(k==="jobs"){S.jobs=S.jobs.includes(v)?S.jobs.filter(x=>x!==v):[...S.jobs,v]}else{S[k]=v;if(k==="trade")S.jobs=[]}save();render();return}

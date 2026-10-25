@@ -27,7 +27,7 @@ const pName=()=>S.name||"Mart Kask";
 const pFirst=()=>pName().split(" ")[0];
 const pNative=()=>{const n=Object.entries(S.langs).find(([c,l])=>l==="Native");return n?n[0]:"ET"};
 const pSpeaks=ex=>ex.langs.find(([c,l])=>c in S.langs&&(l==="Native"||l>="B2")&&(S.langs[c]==="Native"||S.langs[c]>="B2"));
-const PST={new:["New request","rev"],quoted:["Quote sent","rev"],paid:["Booked, paid","ok"],done:["Awaiting confirmation","rev"],released:["Paid out","dark"],declined:["Declined","gray"],cancelled:["Cancelled","gray"]};
+const PST={new:["New request","rev"],quoted:["Quote sent","rev"],paid:["Booked, paid","ok"],done:["Awaiting confirmation","rev"],released:["Paid out","dark"],disputed:["Problem reported","err"],declined:["Declined","gray"],cancelled:["Cancelled","gray"]};
 const ppill=st=>{const [t,k]=PST[st];return `<span class="pill ${k}">${t}</span>`};
 const exav=(ex,s=44)=>`<span style="width:${s}px;height:${s}px;border-radius:50%;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:700;font-size:${Math.round(s*.36)}px;flex-shrink:0">${ex.ini}</span>`;
 const ex=id=>EXPATS.find(e=>e.id===id);
@@ -77,7 +77,7 @@ ${S.pricing==="job"?`<div class="row between"><span>Fixed price for the job</spa
 <label class="f"><span class="l">What the materials are</span><div class="in"><input name="matDesc" value="${esc(j.matDesc||pMat()[0])}"></div></label>
 <label class="f"><span class="l">Note to ${e.name.split(" ")[0]} (translated)</span><textarea class="ta" name="note" placeholder="Write in ${LNAME[pNative()]}">${esc(j.note||"")}</textarea></label>
 <div class="col" style="gap:0;border-top:1px solid #EDE8DF;padding-top:8px">${[["You receive",money(q.net),"qn"],["Kodu fee paid by the customer",money(q.fee),"qf"],["Customer pays",money(q.gross),"qg"]].map(([a,b,id],i)=>`<div class="row between" style="padding:6px 0;font-size:${i===2?"16px":"14px"};${i===2?"color:var(--green);font-weight:700":""}"><span>${a}</span><b style="font-family:Sora,sans-serif" id="${id}">${b}</b></div>`).join("")}</div>
-<div class="row" style="gap:10px"><button class="btn s" type="button" style="width:120px;height:52px" data-act="pdecline">Decline</button><button class="btn p" type="submit" style="height:52px">Send quote</button></div></form>`:""}
+${S.declining?`<div class="col" style="gap:8px"><span class="muted" style="font-weight:700">Why are you declining? The customer sees this, translated.</span><div class="row wrap">${["Fully booked that day","Outside my area","Not my type of job","Needs a site visit first"].map(r=>`<button type="button" class="chip" data-dreason="${r}">${r}</button>`).join("")}</div></div>`:""}<div class="row" style="gap:10px"><button class="btn s" type="button" style="width:120px;height:52px" data-act="pdecline">Decline</button><button class="btn p" type="submit" style="height:52px">Send quote</button></div></form>`:""}
 ${j.status!=="new"?`<div class="card col" style="gap:0;padding:6px 16px">${[[S.pricing==="job"?"Fixed price":"Labour  "+j.hours+" h × €"+pRate(),money(q.labour)],["Materials  "+esc(j.matDesc),money(q.mat)],["Kodu fee, paid by customer",money(q.fee)]].map(([a,b])=>`<div class="row between" style="padding:10px 0;border-bottom:1px solid #EDE8DF;font-size:15px"><span>${a}</span><b style="font-family:Sora,sans-serif">${b}</b></div>`).join("")}<div class="row between" style="padding:12px 0;font-size:17px;color:var(--green)"><b>${j.status==="quoted"?"You receive when done":j.status==="released"?"Paid out":"Held in escrow for you"}</b><b style="font-family:Sora,sans-serif">${money(q.net)}</b></div></div>`:""}
 ${j.status==="quoted"?`<div class="note">${ico("globe","#16201D",16)}<span>Quote sent and translated. ${e.name.split(" ")[0]} has 24 h to accept. Prototype: the customer accepts in a few seconds.</span></div>`:""}
 ${j.status==="paid"?`<div class="note">${ico("lock","#16201D",16)}<span>Paid ${j.paidAt}. ${money(q.net)} is released to you when ${e.name.split(" ")[0]} confirms the job, or automatically 72 h after the visit.</span></div>`:""}
@@ -93,7 +93,7 @@ pchat:()=>{pensure();const e=ex(S.pview);const c=S.pchats[e.id];c.unread=0;const
 <div class="row chathead" style="gap:10px;height:48px"><button class="ib nodk" data-go="back" aria-label="Back">${ico("back")}</button>${exav(e,40)}<span style="flex:1"><b style="display:block">${e.name}</b><span class="muted" style="font-size:12px">${LNAME[e.lang]} speaker  ·  ${e.area}</span></span>${j?`<button class="btn g sm" style="height:36px" data-preq="${j.id}">Job</button>`:""}</div>
 <div class="muted center" style="font-size:12px">Translated ${e.lang} ⇄ ${pNative()} automatically</div>
 <div class="col msgs" style="gap:10px">${msgs}</div>
-<div style="height:12px" class="nodk"></div><form data-form="pmsg" class="cta" style="gap:8px"><button type="button" class="ib" data-act="attach" aria-label="Attach photo">${ico("plus","#16201D",20)}</button><div class="in" style="flex:1;border-radius:22px;height:44px"><input name="msg" placeholder="Write in ${LNAME[pNative()]}…" autocomplete="off"></div><button class="ib" type="submit" style="background:var(--green);border:none" aria-label="Send">${ico("send","#fff",20)}</button></form></div></div><div class="dk">${pnav("pchats")}</div>`},
+<div style="height:12px" class="nodk"></div><div class="qr">${["I can come at the booked time","Please send a photo of the problem","I am on my way","The job is finished"].map(t=>`<button class="chip" data-qr="${t}">${t}</button>`).join("")}</div><form data-form="pmsg" class="cta" style="gap:8px"><button type="button" class="ib" data-act="attach" aria-label="Attach photo">${ico("plus","#16201D",20)}</button><div class="in" style="flex:1;border-radius:22px;height:44px"><input name="msg" placeholder="Write in ${LNAME[pNative()]}…" autocomplete="off"></div><button class="ib" type="submit" style="background:var(--green);border:none" aria-label="Send">${ico("send","#fff",20)}</button></form></div></div><div class="dk">${pnav("pchats")}</div>`},
 
 pearn:()=>{pensure();const inEscrow=S.pjobs.filter(j=>j.status==="paid"||j.status==="done");const pending=S.pjobs.filter(j=>j.status==="quoted");const paid=S.pjobs.filter(j=>j.status==="released");const sum=l=>l.reduce((a,j)=>a+pq(j).net,0);
  return `${ptop()}<h2>Earnings</h2>
@@ -140,8 +140,8 @@ function customerActs(eid){const c=S.pchats[eid];const e=ex(eid);const j=S.pjobs
 document.addEventListener("click",e=>{
   const cal=e.target.closest("[data-cal]");if(cal){S.calDay=S.calDay===+cal.dataset.cal?null:+cal.dataset.cal;S.calJob=null;save();render();return}
   const cj=e.target.closest("[data-caljob]");if(cj){S.calJob=S.calJob===cj.dataset.caljob?null:cj.dataset.caljob;save();render();return}
-  const t=e.target.closest("[data-preq],[data-pchat],[data-ptab],[data-slot],[data-pricing],[data-act]");if(!t)return;const d=t.dataset;
-  if(d.preq){S.preqId=d.preq;save();go("preq");return}
+  const t=e.target.closest("[data-preq],[data-pchat],[data-ptab],[data-slot],[data-pricing],[data-dreason],[data-act]");if(!t)return;const d=t.dataset;
+  if(d.preq){S.preqId=d.preq;S.declining=false;save();go("preq");return}
   if(d.pchat){pensure();S.pview=d.pchat;save();go("pchat");return}
   if(d.ptab){S.ptab=d.ptab;save();render();return}
   if(d.slot&&d.t){const a=S.avail[d.slot];S.avail[d.slot]=a.includes(d.t)?a.filter(x=>x!==d.t):[...a,d.t].sort();save();render();return}
@@ -152,7 +152,8 @@ document.addEventListener("click",e=>{
     if(!S.pchats[e.id])S.pchats[e.id]={eid:e.id,t:Date.now(),unread:0,msgs:[{sys:true,text:`Chat with ${e.name.split(" ")[0]} started · translated automatically`}]};const c=S.pchats[e.id];c.msgs.push({text:`Hi ${pFirst()}, ${r[0].toLowerCase()}. ${r[1]} Could you come ${day} ${date} at ${S.pjobs[0].slot}?`,orig:`(${LNAME[e.lang]} original)`,when:"now",req:id});c.unread=(c.unread||0)+1;c.t=Date.now();save();render();toast(`New request from ${e.name.split(" ")[0]}`);return}
   if(a==="pverify"){S.verified=true;save();render();toast("Verified ID and Licensed badges are live");return}
   if(a==="togOnline"){S.online=S.online===false?true:false;save();render();return}
-  if(a==="pdecline"){const j=S.pjobs.find(x=>x.id===S.preqId);j.status="declined";save();goBack();toast("Request declined");return}
+  if(a==="pdecline"){S.declining=true;save();render();return}
+  if(d.dreason){const j=S.pjobs.find(x=>x.id===S.preqId);j.status="declined";S.declining=false;const c=S.pchats[j.eid];c.msgs.push({me:true,text:"Sorry, I cannot take this job: "+d.dreason.toLowerCase()+".",orig:"",when:"now"});save();goBack();toast("Declined, the customer was told why");return}
   if(a==="pwithdraw"){const j=S.pjobs.find(x=>x.id===S.preqId);j.status="new";save();render();toast("Quote withdrawn");return}
   if(a==="pdone"){const j=S.pjobs.find(x=>x.id===S.preqId);j.status="done";save();render();toast("Marked as done, customer asked to confirm");return}
   if(a==="pconfirm"){const j=S.pjobs.find(x=>x.id===S.preqId);j.status="released";save();render();toast(money(pq(j).net)+" released to your payout");return}
