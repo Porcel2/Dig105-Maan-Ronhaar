@@ -223,7 +223,7 @@ input[type=range]{width:100%;accent-color:var(--green)}
 }
 
 .chatpage{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
-.chatmain{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
+.chatmain{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0;min-width:0}
 .chatmain>*{flex-shrink:0}
 .citem{min-width:0;max-width:100%;overflow:hidden;gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left;width:100%;color:var(--ink)}
 @media (min-width:900px){
@@ -256,6 +256,21 @@ input[type=range]{width:100%;accent-color:var(--green)}
 .cookie .link{color:var(--mint)}
 .cookie .row .btn{height:44px;font-size:15px}
 @media (min-width:900px){body:not(.phone-mode) .cookie{position:fixed;left:auto;right:24px;bottom:24px;width:420px}}
+
+.demo{border:1.5px dashed #C9C1B3;border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:transparent}
+.demotag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9AA29E}
+.demo .btn.sm{height:36px;font-size:13px;width:auto;padding:0 14px}
+.segm{display:flex;padding:4px;border-radius:22px;background:#E9E4DA;gap:2px}.segm button{flex:1;height:34px;border:none;border-radius:17px;background:transparent;font:inherit;font-size:13px;font-weight:700;color:var(--ink)}.segm button.on{background:var(--ink);color:#fff}
+.bar{height:8px;border-radius:4px;background:#E9E4DA;overflow:hidden}.bar span{display:block;height:100%;background:var(--green)}
+.chart{display:flex;align-items:flex-end;gap:8px;height:170px}.bcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}.bbar{width:100%;max-width:42px;border-radius:8px 8px 3px 3px;background:var(--mint)}.bbar.cur{background:var(--green)}.bval{font-size:11px;font-weight:700;color:var(--ink)}.blab{font-size:11px;color:var(--muted);white-space:nowrap}
+.jstrip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.jstrip::-webkit-scrollbar{display:none}.jstrip button{flex:1 0 auto;min-width:220px;display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 12px;font:inherit;color:var(--ink)}
+.qrw{display:inline-flex;align-items:center;position:relative;flex-shrink:0}.qrx{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:10px;border:none;background:var(--terra);color:#fff;font-size:13px;line-height:1;padding:0}
+.slot.booked{background:#F0ECE4;border-color:#F0ECE4;color:#7B827E;display:inline-flex;flex-direction:column;justify-content:center;height:40px;line-height:1.1}.slot.booked small{font-size:10px;font-weight:600}
+.wkrow{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #EDE8DF}.wkrow.today .wkday b{color:var(--terra)}.wkday{width:40px;display:flex;flex-direction:column;align-items:center;flex-shrink:0}.wkday small{font-size:11px;color:var(--muted)}.wkday b{font-size:18px}
+.wkjobs{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}.wkjob{text-align:left;background:var(--ivory);border:none;border-left:4px solid var(--green);border-radius:8px;padding:8px 10px;font:inherit;font-size:13px;color:var(--ink)}
+.rcpt{font-size:13px;display:inline-flex;gap:6px;align-items:center;margin:-4px 0 10px}
+.rt{width:100%;border-collapse:collapse;font-size:13px}.rt th{text-align:left;color:var(--muted);font-weight:600;padding:6px 0;border-bottom:1px solid var(--line)}.rt td{padding:8px 0;border-bottom:1px solid #EDE8DF}.rt .tot td{font-weight:700;color:var(--ink);font-size:14px;border-bottom:none}
+@media print{body *{visibility:hidden}.receipt,.receipt *{visibility:visible}.receipt{position:fixed;left:0;top:0;width:100%;border:none}.devbar,.toast,.cookie{display:none}}
 </style>
 </head>
 <body>
@@ -294,6 +309,7 @@ const chips=(k,items,sel,multi)=>`<div class="row wrap">${items.map(i=>`<button 
 const esc=s=>String(s).replace(/</g,"&lt;");
 
 const V={
+  company:v=>v.trim().length>=3?"":"Enter your registered company name",
   llName:v=>v.trim()?"":"Enter your landlord's name",
   email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?"":"Enter a full email address, for example name@domain.com",
   phone:v=>/^\+?[\d\s]{7,}$/.test(v)?"":"Enter a phone number with country code",
@@ -337,7 +353,7 @@ role:()=>`${bar()}${head("Who are you joining as?","You can add the other role l
 
 account:()=>{const pr=S.role==="provider";return `${bar(1,pr?6:4)}${head(pr?"Create your provider account":"Create your account",pr?"Expats will see your name, trade and languages.":"Takes about two minutes.")}
 <form data-form="account" class="col" style="gap:14px">${field("name","Full name","First and last name","text",'autocomplete="name"')}${field("email","Email","name@domain.com","email",'autocomplete="email"')}${field("phone","Phone","+372 5…","tel",'autocomplete="tel"')}${field("password","Password","At least 8 characters, one number","password",'autocomplete="new-password"')}
-${pr?`<div class="col"><span class="muted" style="font-weight:700">I work as</span>${chips("entity",["Sole trader (FIE)","Company (OÜ)"],S.entity)}</div>`:""}
+${pr?`<div class="col"><span class="muted" style="font-weight:700">I work as</span>${chips("entity",["Sole trader (FIE)","Company (OÜ)"],S.entity)}</div>${S.entity==="Company (OÜ)"?field("company","Company name","Kask Torutööd OÜ"):""}`:""}
 ${chk("terms",pr?`I agree to the <button type="button" class="link" data-legal="terms">Terms</button>, the <button type="button" class="link" data-legal="provider">Provider Agreement</button> and the <button type="button" class="link" data-legal="privacy">Privacy Notice</button>`:`I agree to the <button type="button" class="link" data-legal="terms">Terms of Service</button> and have read the <button type="button" class="link" data-legal="privacy">Privacy Notice</button>`,S.terms)}${err.terms?`<span class="errt">${err.terms}</span>`:""}
 ${pr?"":chk("tips","Send me tips for settling in Estonia (optional)",S.tips)}
 <div class="foot"><button class="btn p" type="submit">Continue</button></div></form>`},
@@ -369,7 +385,7 @@ trade:()=>`${bar(3,6)}${head("What do you do?","Pick your main trade and the job
 <form data-form="trade" class="col" style="gap:14px">${chips("trade",Object.keys(TRADES),S.trade)}
 <div class="col"><span class="muted" style="font-weight:700">Jobs</span>${chips("jobs",TRADES[S.trade],S.jobs,true)}${err.jobs?`<span class="errt">${err.jobs}</span>`:""}</div>
 <label class="f"><span class="l">Hourly rate</span><div class="in ${err.rate?"err":""}"><input name="rate" inputmode="decimal" placeholder="38" value="${S.rate}"><span class="muted">€ / h</span></div>${err.rate?`<span class="errt">${err.rate}</span>`:""}</label>
-${field("areas","Areas you cover","Kesklinn, Kalamaja…")}${field("licence","Licence or registration number","EHR …")}
+<div class="col" style="gap:8px"><span class="muted" style="font-weight:700">Areas you cover</span><div class="row wrap" style="gap:6px">${Object.keys(CITIES).map(c=>`<button type="button" class="chip ${(S.areaCity||"Tallinn")===c?"on":""}" style="height:32px;font-size:13px" data-acity="${c}">${c}</button>`).join("")}</div><div class="row wrap" style="gap:6px"><button type="button" class="chip ${(S.areaD||[]).includes("__all")?"on":""}" style="height:32px;font-size:13px" data-adist="__all">Whole of ${S.areaCity||"Tallinn"}</button>${CITIES[S.areaCity||"Tallinn"].map(d=>`<button type="button" class="chip ${(S.areaD||[]).includes(d)?"on":""}" style="height:32px;font-size:13px" data-adist="${d}">${d}</button>`).join("")}</div>${err.areas?`<span class="errt">${err.areas}</span>`:""}</div>${field("licence","Licence or registration number","EHR …")}
 <div class="foot"><button class="btn p" type="submit">Continue</button></div></form>`,
 
 verify:()=>`${bar(5,6)}${head("Verify your identity","Required before you can take jobs. Checked by our verification partner, never stored by Kodu.")}
@@ -379,7 +395,7 @@ verify:()=>`${bar(5,6)}${head("Verify your identity","Required before you can ta
 <form data-form="vat" class="col" style="gap:6px">${field("vat",S.entity==="Company (OÜ)"?"VAT number (KMKR)":"VAT number (KMKR), optional for sole traders","EE123456789")}<span class="muted">Estonian VAT numbers start with EE and have nine digits. Shown on your invoices and receipts.</span></form>
 ${err.docs?`<span class="errt">${err.docs}</span>`:""}
 <div class="note">${ico("lock","#16201D",16)}<span>Documents are deleted after the check. Verified ID and Licensed badges appear on your profile within 24 h.</span></div>
-<div class="foot"><button class="btn p" data-act="submitDocs">Submit for verification</button></div>`,
+<div class="foot"><button class="btn p" data-act="submitDocs">Submit for verification</button><p class="center"><button class="link" data-act="verifyLater">Verify later, look around first</button></p></div>`,
 
 payout:()=>`${bar(6,6)}${head("Where should we pay you?","Kodu holds each payment in escrow and releases it when the customer confirms the job.")}
 <form data-form="payout" class="col" style="gap:14px">${field("holder","Account holder","Name on the account")}${field("iban","IBAN","EE00 0000 0000 0000 0000")}
@@ -409,7 +425,7 @@ let cdT;function countdown(){clearInterval(cdT);let n=30;cdT=setInterval(()=>{n-
 
 const SAMPLE={expat:{name:"Sofia Ramírez",email:"sofia.ramirez@gmail.com",phone:"+372 5555 0418",password:"kodu2026",terms:true,langs:{ES:"Native",EN:"C1",ET:"A2"},address:"Narva mnt 7, Kesklinn, Tallinn",homeType:"Rented flat"},
   expatLandlord:{llName:"Stay Larsen",llEmail:"office@larsen.ee",llPhone:"+372 600 1234",llCompany:"Stay Larsen OÜ"},
-  provider:{name:"Mart Kask",email:"mart.kask@gmail.com",phone:"+372 5555 0902",password:"kodu2026",terms:true,langs:{ET:"Native",EN:"C1",RU:"B2"},trade:"Plumbing",jobs:["Leaks","Boilers","Taps and mixers"],rate:"38",areas:"Kesklinn, Kalamaja",licence:"EHR 1182 2306",docs:{Front:true,Back:true,Selfie:true,Licence:true},vat:"EE102345678",holder:"Mart Kask",iban:"EE38 2200 2210 2014 5685"}};
+  provider:{name:"Mart Kask",email:"mart.kask@gmail.com",phone:"+372 5555 0902",password:"kodu2026",terms:true,langs:{ET:"Native",EN:"C1",RU:"B2"},trade:"Plumbing",jobs:["Leaks","Boilers","Taps and mixers"],rate:"38",areas:"Kesklinn, Kalamaja",areaCity:"Tallinn",areaD:["Kesklinn","Kalamaja"],licence:"EHR 1182 2306",docs:{Front:true,Back:true,Selfie:true,Licence:true},vat:"EE102345678",holder:"Mart Kask",iban:"EE38 2200 2210 2014 5685"}};
 function skipStep(){
   if(route==="book"){S.draft.title=S.draft.title||"Leaking kitchen tap";S.draft.desc=S.draft.desc||"Dripping for a week, the cupboard under the sink is wet.";S.draft["Photo 1"]=true;save();toast("Filled with sample data");go("slots");return}
   if(route==="slots"){const p=find(S.view);const d=Object.keys(p.slots)[0];S.draft.day=d;S.draft.slot=p.slots[d][0];save();document.querySelector("[data-act=sendRequest]").click();return}
@@ -453,7 +469,7 @@ document.addEventListener("click",e=>{
   if(a==="resend"){toast("New code sent");countdown();render();return}
   if(a==="langsNext"){if(!Object.keys(S.langs).length){err={langs:"Add at least one language"};render();return}if(S.loggedIn){save();goBack();return}go(S.role==="provider"?"verify":"home");return}
   if(a==="skipHome"){S.loggedIn=true;save();go("edone");return}
-  if(a==="submitDocs"){const vf=document.querySelector("form[data-form=vat]");if(vf)readForm(vf);err={};if(!(S.docs.Front&&S.docs.Back&&S.docs.Selfie))err.docs="Add front, back and a selfie to continue";if(S.vat&&!/^EE\d{9}$/.test(S.vat.replace(/\s+/g,"").toUpperCase()))err.vat="Enter a valid number, EE followed by nine digits";if(S.entity==="Company (OÜ)"&&!S.vat)err.vat="Companies need a VAT number";if(err.docs||err.vat){render();return}S.vat=S.vat.replace(/\s+/g,"").toUpperCase();if(S.loggedIn){goBack();return}go("payout");return}
+  if(a==="submitDocs"){S.licState=S.licState==="rejected"?"review":S.licState;S.verifyLater=false;const vf=document.querySelector("form[data-form=vat]");if(vf)readForm(vf);err={};if(!(S.docs.Front&&S.docs.Back&&S.docs.Selfie))err.docs="Add front, back and a selfie to continue";if(S.vat&&!/^EE\d{9}$/.test(S.vat.replace(/\s+/g,"").toUpperCase()))err.vat="Enter a valid number, EE followed by nine digits";if(S.entity==="Company (OÜ)"&&!S.vat)err.vat="Companies need a VAT number";if(err.docs||err.vat){render();return}S.vat=S.vat.replace(/\s+/g,"").toUpperCase();if(S.loggedIn){goBack();return}go("payout");return}
   if(a==="soon"){toast("That screen is built next");return}
   if(a==="skip"){skipStep();return}
   if(a==="logout"){try{localStorage.removeItem("kodu.proto."+S.role)}catch(e){}S=blank();save();history=[];go("welcome");return}
@@ -461,10 +477,10 @@ document.addEventListener("click",e=>{
 document.addEventListener("submit",e=>{
   e.preventDefault();const f=e.target;readForm(f);const k=f.dataset.form;
   if(k==="login"){if(!validate(["email","password"])){render();return}S.loggedIn=true;save();toast("Logged in as "+S.email);go(S.role==="provider"?"phome":"ehome");return}
-  if(k==="account"){const ok=validate(["name","email","phone","password"]);if(!S.terms)err.terms="You need to accept the terms to continue";if(!ok||err.terms){render();return}save();go("otp");return}
+  if(k==="account"){const ok=validate(["name","email","phone","password"].concat(S.role==="provider"&&S.entity==="Company (OÜ)"?["company"]:[]));if(!S.terms)err.terms="You need to accept the terms to continue";if(!ok||err.terms){render();return}save();go("otp");return}
   if(k==="home"){if(!validate(["address"])){render();return}if(S.landlord){save();go("landlord");return}S.loggedIn=true;save();go("ehome");return}
   if(k==="landlord"){const ok=validate(["llName"]);if(!S.llEmail&&!S.llPhone)err.llEmail="Add an email or a phone number";else if(S.llEmail&&V.email(S.llEmail))err.llEmail=V.email(S.llEmail);if(!ok||err.llEmail){render();return}S.loggedIn=true;save();toast("Landlord added");go("ehome");return}
-  if(k==="trade"){const ok=validate(["rate","areas","licence"]);if(!S.jobs.length)err.jobs="Pick at least one job";if(!ok||err.jobs){render();return}save();if(S.loggedIn){goBack();return}go("langs");return}
+  if(k==="trade"){const city=S.areaCity||"Tallinn";const ad=S.areaD||[];S.areas=ad.includes("__all")?"All of "+city:ad.length?ad.join(", ")+(city!=="Tallinn"?", "+city:""):"";const ok=validate(["rate","areas","licence"]);if(!S.jobs.length)err.jobs="Pick at least one job";if(!ok||err.jobs){render();return}save();if(S.loggedIn){goBack();return}go("langs");return}
   if(k==="payout"){if(!validate(["holder","iban"])){render();return}if(S.loggedIn){save();goBack();return}S.loggedIn=true;save();go("pdone");return}
 });
 document.addEventListener("input",e=>{
