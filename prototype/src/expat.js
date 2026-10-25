@@ -23,7 +23,7 @@ const speaks=p=>p.langs.find(([c,l])=>goodLangs().includes(c)&&(l==="Native"||l>
 const speaksSel=p=>{const s=S.f.langSel;return s?p.langs.find(([c,l])=>c===s&&(l==="Native"||l>="B2")):speaks(p)};
 const ensure=()=>{S.q=S.q||"";S.f=S.f||{lang:true,verified:true,avail:"This week",max:60,sort:"Best match",area:""};if(S.f.area===undefined)S.f.area="";if(S.f.day===undefined)S.f.day="";if(S.f.time===undefined)S.f.time="";if(S.f.minR===undefined)S.f.minR=0;if(S.f.lic===undefined)S.f.lic=false;if(S.f.fast===undefined)S.f.fast=false;if(S.f.city===undefined)S.f.city="Tallinn";if(S.f.langSel===undefined)S.f.langSel="";if(S.f.pricing===undefined)S.f.pricing="";S.cat=S.cat||"";S.jobs2=S.jobs2||[];S.saved=S.saved||[];S.chats=S.chats||{};S.draft=S.draft||{}};
 const find=id=>P.find(p=>p.id===id);
-const money=n=>"€"+n.toFixed(2);
+const money=n=>"€"+Number(n).toLocaleString("en-IE",{minimumFractionDigits:2,maximumFractionDigits:2});
 const quote=j=>{const p=find(j.pid);const labour=p.pricing==="job"?p.jobPrice:j.hours*p.rate;const fee=Math.round((labour+j.materials)*0.1*100)/100;return{labour,fee,total:Math.round((labour+j.materials+fee)*100)/100}};
 const STATUS={requested:["Quote requested","rev"],quoted:["Quote received","rev"],paid:["Paid, in escrow","ok"],done:["Completed","dark"],cancelled:["Cancelled","gray"]};
 const pill=(st)=>{const [t,k]=STATUS[st];return `<span class="pill ${k}">${t}</span>`};

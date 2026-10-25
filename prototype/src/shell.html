@@ -171,7 +171,7 @@ input[type=range]{width:100%;accent-color:var(--green)}
  body:not(.phone-mode) .bnav::before{content:"kodu";position:absolute;top:30px;left:24px;font-family:Sora,sans-serif;font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink)}
  body:not(.phone-mode) .bnav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;height:48px;padding:0 14px;border-radius:14px;font-size:15px;color:var(--muted)}
  body:not(.phone-mode) .bnav button.on{background:var(--mint);color:var(--ink)}
- body:not(.phone-mode) .pil{width:auto;height:auto;background:none!important}
+ body:not(.phone-mode) .pil{width:auto;height:auto;background:none!important;position:static}
  body:not(.phone-mode) .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
  body:not(.phone-mode) .grid3{display:grid;grid-template-columns:repeat(3,1fr)!important;gap:12px}
  body:not(.phone-mode) .cta{margin:auto auto 0;border-radius:20px 20px 0 0;padding-bottom:16px}
@@ -225,12 +225,14 @@ input[type=range]{width:100%;accent-color:var(--green)}
 .chatpage{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
 .chatmain{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
 .chatmain>*{flex-shrink:0}
-.citem{gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left;width:100%;color:var(--ink)}
+.citem{min-width:0;max-width:100%;overflow:hidden;gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left;width:100%;color:var(--ink)}
 @media (min-width:900px){
  body:not(.phone-mode) .nodk{display:none!important}
  body:not(.phone-mode) #phone.chatview .screen{padding-bottom:28px;gap:0}
- body:not(.phone-mode) #phone.chatview .screen>.chatpage{max-width:1080px;flex-direction:row;gap:0;height:calc(100vh - 64px);height:calc(100dvh - 64px);background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden}
- body:not(.phone-mode) .chatside{width:320px;flex-shrink:0;border-right:1px solid var(--line);padding:20px 16px;overflow-y:auto;background:#fff}
+ body:not(.phone-mode) #phone.chatview .screen>.chatpage,body:not(.phone-mode) #phone.withnav.chatview .screen>.chatpage{max-width:1080px!important;flex-direction:row;gap:0;height:calc(100vh - 64px);height:calc(100dvh - 64px);background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden}
+ body:not(.phone-mode) .citem .row.between .muted{white-space:nowrap;margin-left:8px}
+ body:not(.phone-mode) .bnav button{position:relative}body:not(.phone-mode) .pil .nb{position:absolute;top:50%;right:14px;left:auto;transform:translateY(-50%)}
+ body:not(.phone-mode) .chatside{flex-direction:column;width:320px;flex-shrink:0;overflow-x:hidden;border-right:1px solid var(--line);padding:20px 16px;overflow-y:auto;background:#fff}
  body:not(.phone-mode) .citem{padding:12px;border-radius:14px;border-bottom:none}body:not(.phone-mode) .citem.on{background:var(--ivory)}body:not(.phone-mode) .citem:hover{background:#F6F2EA}
  body:not(.phone-mode) .chatmain{padding:16px 24px 0;background:var(--ivory)}
  body:not(.phone-mode) .chathead{height:56px!important;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:0}

@@ -171,7 +171,7 @@ input[type=range]{width:100%;accent-color:var(--green)}
  body:not(.phone-mode) .bnav::before{content:"kodu";position:absolute;top:30px;left:24px;font-family:Sora,sans-serif;font-weight:700;font-size:24px;letter-spacing:-.02em;color:var(--ink)}
  body:not(.phone-mode) .bnav button{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;height:48px;padding:0 14px;border-radius:14px;font-size:15px;color:var(--muted)}
  body:not(.phone-mode) .bnav button.on{background:var(--mint);color:var(--ink)}
- body:not(.phone-mode) .pil{width:auto;height:auto;background:none!important}
+ body:not(.phone-mode) .pil{width:auto;height:auto;background:none!important;position:static}
  body:not(.phone-mode) .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
  body:not(.phone-mode) .grid3{display:grid;grid-template-columns:repeat(3,1fr)!important;gap:12px}
  body:not(.phone-mode) .cta{margin:auto auto 0;border-radius:20px 20px 0 0;padding-bottom:16px}
@@ -225,12 +225,14 @@ input[type=range]{width:100%;accent-color:var(--green)}
 .chatpage{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
 .chatmain{display:flex;flex-direction:column;gap:18px;flex:1;min-height:0}
 .chatmain>*{flex-shrink:0}
-.citem{gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left;width:100%;color:var(--ink)}
+.citem{min-width:0;max-width:100%;overflow:hidden;gap:12px;padding:12px 0;border-bottom:1px solid #EDE8DF;background:none;border-left:none;border-right:none;border-top:none;font:inherit;text-align:left;width:100%;color:var(--ink)}
 @media (min-width:900px){
  body:not(.phone-mode) .nodk{display:none!important}
  body:not(.phone-mode) #phone.chatview .screen{padding-bottom:28px;gap:0}
- body:not(.phone-mode) #phone.chatview .screen>.chatpage{max-width:1080px;flex-direction:row;gap:0;height:calc(100vh - 64px);height:calc(100dvh - 64px);background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden}
- body:not(.phone-mode) .chatside{width:320px;flex-shrink:0;border-right:1px solid var(--line);padding:20px 16px;overflow-y:auto;background:#fff}
+ body:not(.phone-mode) #phone.chatview .screen>.chatpage,body:not(.phone-mode) #phone.withnav.chatview .screen>.chatpage{max-width:1080px!important;flex-direction:row;gap:0;height:calc(100vh - 64px);height:calc(100dvh - 64px);background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden}
+ body:not(.phone-mode) .citem .row.between .muted{white-space:nowrap;margin-left:8px}
+ body:not(.phone-mode) .bnav button{position:relative}body:not(.phone-mode) .pil .nb{position:absolute;top:50%;right:14px;left:auto;transform:translateY(-50%)}
+ body:not(.phone-mode) .chatside{flex-direction:column;width:320px;flex-shrink:0;overflow-x:hidden;border-right:1px solid var(--line);padding:20px 16px;overflow-y:auto;background:#fff}
  body:not(.phone-mode) .citem{padding:12px;border-radius:14px;border-bottom:none}body:not(.phone-mode) .citem.on{background:var(--ivory)}body:not(.phone-mode) .citem:hover{background:#F6F2EA}
  body:not(.phone-mode) .chatmain{padding:16px 24px 0;background:var(--ivory)}
  body:not(.phone-mode) .chathead{height:56px!important;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:0}
@@ -490,7 +492,7 @@ const speaks=p=>p.langs.find(([c,l])=>goodLangs().includes(c)&&(l==="Native"||l>
 const speaksSel=p=>{const s=S.f.langSel;return s?p.langs.find(([c,l])=>c===s&&(l==="Native"||l>="B2")):speaks(p)};
 const ensure=()=>{S.q=S.q||"";S.f=S.f||{lang:true,verified:true,avail:"This week",max:60,sort:"Best match",area:""};if(S.f.area===undefined)S.f.area="";if(S.f.day===undefined)S.f.day="";if(S.f.time===undefined)S.f.time="";if(S.f.minR===undefined)S.f.minR=0;if(S.f.lic===undefined)S.f.lic=false;if(S.f.fast===undefined)S.f.fast=false;if(S.f.city===undefined)S.f.city="Tallinn";if(S.f.langSel===undefined)S.f.langSel="";if(S.f.pricing===undefined)S.f.pricing="";S.cat=S.cat||"";S.jobs2=S.jobs2||[];S.saved=S.saved||[];S.chats=S.chats||{};S.draft=S.draft||{}};
 const find=id=>P.find(p=>p.id===id);
-const money=n=>"€"+n.toFixed(2);
+const money=n=>"€"+Number(n).toLocaleString("en-IE",{minimumFractionDigits:2,maximumFractionDigits:2});
 const quote=j=>{const p=find(j.pid);const labour=p.pricing==="job"?p.jobPrice:j.hours*p.rate;const fee=Math.round((labour+j.materials)*0.1*100)/100;return{labour,fee,total:Math.round((labour+j.materials+fee)*100)/100}};
 const STATUS={requested:["Quote requested","rev"],quoted:["Quote received","rev"],paid:["Paid, in escrow","ok"],done:["Completed","dark"],cancelled:["Cancelled","gray"]};
 const pill=(st)=>{const [t,k]=STATUS[st];return `<span class="pill ${k}">${t}</span>`};
@@ -735,7 +737,7 @@ const pName=()=>S.name||"Mart Kask";
 const pFirst=()=>pName().split(" ")[0];
 const pNative=()=>{const n=Object.entries(S.langs).find(([c,l])=>l==="Native");return n?n[0]:"ET"};
 const pSpeaks=ex=>ex.langs.find(([c,l])=>c in S.langs&&(l==="Native"||l>="B2")&&(S.langs[c]==="Native"||S.langs[c]>="B2"));
-const PST={new:["New request","rev"],quoted:["Quote sent","rev"],paid:["Booked, paid","ok"],done:["Completed","dark"],released:["Paid out","dark"],declined:["Declined","gray"],cancelled:["Cancelled","gray"]};
+const PST={new:["New request","rev"],quoted:["Quote sent","rev"],paid:["Booked, paid","ok"],done:["Awaiting confirmation","rev"],released:["Paid out","dark"],declined:["Declined","gray"],cancelled:["Cancelled","gray"]};
 const ppill=st=>{const [t,k]=PST[st];return `<span class="pill ${k}">${t}</span>`};
 const exav=(ex,s=44)=>`<span style="width:${s}px;height:${s}px;border-radius:50%;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-weight:700;font-size:${Math.round(s*.36)}px;flex-shrink:0">${ex.ini}</span>`;
 const ex=id=>EXPATS.find(e=>e.id===id);
@@ -747,7 +749,7 @@ function pensure(){
   if(!S.pjobs){const reqs=REQ_BY_CAT[pTrade()]||REQ_BY_CAT.Plumbing;const DN={Mon:13,Tue:14,Wed:15,Thu:16,Fri:17,Sat:18,Sun:19};S.pjobs=reqs.map(([t,d,ph,day,slot],i)=>({id:"r"+(i+1),eid:EXPATS[i].id,title:t,desc:d,photos:ph,day,slot,date:DN[day],status:i===2?"paid":"new",hours:1.5,materials:i===2?pMat()[1]:0,matDesc:i===2?pMat()[0]:"",ago:["12 min ago","1 h ago","yesterday"][i],paidAt:i===2?"yesterday":null}));
     S.pjobs.push({id:"r0",eid:"e4",title:"Previous job: "+reqs[1][0].toLowerCase(),desc:reqs[1][1],photos:1,day:"Fri",slot:"10:00",date:9,status:"released",hours:2,materials:pMat()[1],matDesc:pMat()[0],ago:"last week",paidAt:"last week"});
     const extra=[[2,"Fri","09:00","e2","released"],[5,"Mon","14:00","e3","released"],[7,"Wed","11:00","e1","released"],[21,"Wed","09:00","e2","paid"],[23,"Fri","14:00","e4","paid"],[28,"Wed","10:00","e3","paid"],[30,"Fri","09:00","e1","paid"]];
-    extra.forEach(([date,day,slot,eid,st],i)=>{const r=reqs[i%reqs.length];S.pjobs.push({id:"x"+i,eid,title:r[0],desc:r[1],photos:r[2],day,slot,date,status:st,hours:[1,1.5,2][i%3],materials:pMat()[1],matDesc:pMat()[0],ago:st==="released"?"earlier this month":"booked",paidAt:st==="released"?"earlier":"last week"})});
+    extra.forEach(([date,day,slot,eid,st],i)=>{const r=reqs[i%reqs.length];S.pjobs.push({id:"x"+i,eid,title:r[0],desc:r[1],photos:r[2],day,slot,date,status:st,hours:[1,1.5,2][i%3],materials:pMat()[1],matDesc:pMat()[0],ago:(st==="released"?"done ":"")+day+" "+date+" Oct",paidAt:st==="released"?"earlier":"last week"})});
     EXTRA_REQ.forEach(([t,d,ph,day,date,slot],i)=>{S.pjobs.push({id:"n"+i,eid:EXPATS[4+(i%4)].id,title:t,desc:d,photos:ph,day,slot,date,status:"new",hours:1.5,materials:0,matDesc:"",ago:["25 min ago","2 h ago","3 h ago","this morning","5 min ago"][i]})});
     S.pjobs.forEach(j=>{if(!S.pchats[j.eid]){const e=ex(j.eid);S.pchats[j.eid]={eid:j.eid,t:Date.now()-Math.random()*1e7,unread:j.status==="new"?1:0,msgs:[{sys:true,text:`Chat with ${e.name.split(" ")[0]} started · translated automatically`},{text:`Hi ${pFirst()}, ${j.title.toLowerCase()}. ${j.desc} Could you come ${j.day} at ${j.slot}?`,orig:`(${LNAME[e.lang]} original)`,when:j.ago,req:j.id}]}}})}
   save();
@@ -775,16 +777,16 @@ ${S.ptab==="Calendar"?pcal():S.ptab==="Availability"?`<p class="sub">Tap a slot 
  :list.length?`<div class="col grid2" style="gap:12px">${list.map(reqcard).join("")}</div>`:`<div class="empty"><span class="eic">${ico("calendar","#16201D",30)}</span><b style="font-family:Sora,sans-serif;font-size:18px">Nothing here yet</b><p class="muted">${S.ptab==="Requests"?"New requests from expats land here.":S.ptab==="Booked"?"Paid bookings appear here.":"Completed and declined jobs are kept here."}</p></div>`}
 <div style="height:12px"></div>${pnav("pjobs")}`},
 
-preq:()=>{pensure();const j=S.pjobs.find(x=>x.id===S.preqId);const e=ex(j.eid);const sp=pSpeaks(e);const q=pq(j);return `${bar()}<div class="row between"><h2 style="font-size:24px">${esc(j.title)}</h2>${ppill(j.status)}</div>
+preq:()=>{pensure();const j=S.pjobs.find(x=>x.id===S.preqId);const e=ex(j.eid);const sp=pSpeaks(e);const q=pq(j.status==="new"?{...j,materials:j.materials||pMat()[1]}:j);return `${bar()}<div class="row between"><h2 style="font-size:24px">${esc(j.title)}</h2>${ppill(j.status)}</div>
 <div class="card row" style="gap:12px">${exav(e)}<span style="flex:1"><b>${e.name}</b><span class="muted" style="display:block">${LNAME[e.lang]} speaking expat  ·  ${e.area}${j.status==="paid"||j.status==="done"?", Narva mnt 7":""}</span><span class="row wrap" style="gap:4px;margin-top:4px">${e.langs.map(([c,l])=>`<span class="lc ${c in S.langs?"on":""}"><b>${c}</b> <span>${l}</span></span>`).join("")}</span></span><button class="btn g sm" style="height:40px" data-pchat="${e.id}">Chat</button></div>
-<div class="note">${ico("globe","#16201D",16)}<span>${sp?`You both speak ${LNAME[sp[0]]}.`:`${e.name.split(" ")[0]} writes in ${LNAME[e.lang]}. You read and reply in ${LNAME[pNative()]}, Kodu translates both ways.`} Address is shared after payment.</span></div>
+<div class="note">${ico("globe","#16201D",16)}<span>${sp?`You both speak ${LNAME[sp[0]]}.`:`${e.name.split(" ")[0]} writes in ${LNAME[e.lang]}. You read and reply in ${LNAME[pNative()]}, Kodu translates both ways.`}${j.status==="paid"||j.status==="done"||j.status==="released"?" Full address: Narva mnt 7, "+e.area+".":" Address is shared after payment."}</span></div>
 <div class="col"><b style="font-family:Sora,sans-serif;font-size:17px">Request</b><p class="sub">${esc(j.desc)}</p><div class="row wrap"><span class="chip">${ico("calendar","#16201D",16)}${j.day} ${j.slot}</span>${j.photos?`<span class="chip">${j.photos} photos</span>`:""}<span class="chip">${j.ago}</span></div>${j.photos?`<div class="row">${Array.from({length:j.photos},()=>`<span class="photo done" style="width:72px;height:72px"></span>`).join("")}</div>`:""}</div>
 ${j.status==="new"?`<form data-form="quote" class="card col" style="gap:12px"><b style="font-family:Sora,sans-serif;font-size:17px">Your quote</b>
 ${S.pricing==="job"?`<div class="row between"><span>Fixed price for the job</span><b>€${S.jobPrice}</b></div>`:`<label class="f"><span class="l">Hours on site</span><div class="in"><input name="hours" inputmode="decimal" value="${j.hours}"><span class="muted">h × €${pRate()}</span></div></label>`}
 <label class="f"><span class="l">Materials, €</span><div class="in"><input name="materials" inputmode="decimal" value="${j.materials||pMat()[1]}"><span class="muted">€</span></div></label>
 <label class="f"><span class="l">What the materials are</span><div class="in"><input name="matDesc" value="${esc(j.matDesc||pMat()[0])}"></div></label>
 <label class="f"><span class="l">Note to ${e.name.split(" ")[0]} (translated)</span><textarea class="ta" name="note" placeholder="Write in ${LNAME[pNative()]}">${esc(j.note||"")}</textarea></label>
-<div class="col" style="gap:0;border-top:1px solid #EDE8DF;padding-top:8px">${[["You receive",money(q.net)],["Kodu fee paid by the customer",money(q.fee)],["Customer pays",money(q.gross)]].map(([a,b],i)=>`<div class="row between" style="padding:6px 0;font-size:${i===2?"16px":"14px"};${i===2?"color:var(--green);font-weight:700":""}"><span>${a}</span><b style="font-family:Sora,sans-serif">${b}</b></div>`).join("")}</div>
+<div class="col" style="gap:0;border-top:1px solid #EDE8DF;padding-top:8px">${[["You receive",money(q.net),"qn"],["Kodu fee paid by the customer",money(q.fee),"qf"],["Customer pays",money(q.gross),"qg"]].map(([a,b,id],i)=>`<div class="row between" style="padding:6px 0;font-size:${i===2?"16px":"14px"};${i===2?"color:var(--green);font-weight:700":""}"><span>${a}</span><b style="font-family:Sora,sans-serif" id="${id}">${b}</b></div>`).join("")}</div>
 <div class="row" style="gap:10px"><button class="btn s" type="button" style="width:120px;height:52px" data-act="pdecline">Decline</button><button class="btn p" type="submit" style="height:52px">Send quote</button></div></form>`:""}
 ${j.status!=="new"?`<div class="card col" style="gap:0;padding:6px 16px">${[[S.pricing==="job"?"Fixed price":"Labour  "+j.hours+" h × €"+pRate(),money(q.labour)],["Materials  "+esc(j.matDesc),money(q.mat)],["Kodu fee, paid by customer",money(q.fee)]].map(([a,b])=>`<div class="row between" style="padding:10px 0;border-bottom:1px solid #EDE8DF;font-size:15px"><span>${a}</span><b style="font-family:Sora,sans-serif">${b}</b></div>`).join("")}<div class="row between" style="padding:12px 0;font-size:17px;color:var(--green)"><b>${j.status==="quoted"?"You receive when done":j.status==="released"?"Paid out":"Held in escrow for you"}</b><b style="font-family:Sora,sans-serif">${money(q.net)}</b></div></div>`:""}
 ${j.status==="quoted"?`<div class="note">${ico("globe","#16201D",16)}<span>Quote sent and translated. ${e.name.split(" ")[0]} has 24 h to accept. Prototype: the customer accepts in a few seconds.</span></div>`:""}
@@ -878,6 +880,8 @@ document.addEventListener("submit",e=>{
 SCREENS.pdone=((orig)=>()=>orig().replace('data-act="soon">Set my availability','data-act="pstart">Set my availability').replace('data-act="soon">Preview my profile','data-act="pswitch">Preview my profile'))(SCREENS.pdone);
 document.addEventListener("click",e=>{const t=e.target.closest('[data-act="pstart"]');if(!t)return;pensure();S.ptab="Availability";history=[];go("pjobs")});
 if(S.loggedIn&&S.role==="provider"){route="phome";render()}
+
+document.addEventListener("input",ev=>{const f=ev.target.closest("form[data-form=quote]");if(!f)return;const j=S.pjobs.find(x=>x.id===S.preqId);const q=pq({...j,hours:f.hours?(+f.hours.value||0):j.hours,materials:+f.materials.value||0});const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=money(v)};set("qn",q.net);set("qf",q.fee);set("qg",q.gross)});
 
 </script>
 <script>
