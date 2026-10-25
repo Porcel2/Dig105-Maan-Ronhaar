@@ -16,7 +16,7 @@ This project is carried out individually, so both roles and both task branches a
 ## Folder Navigation
 * [/video-diaries/](./video-diaries/) - Video sprint entries & PPP logs
 * [/miro-boards/](./miro-boards/) - Visual planning & UI designs
-* [/documentation/](./documentation/) - Research notes & user test logs
+* [/documentation/](./documentation/) - Research notes, user test logs and [legal documents](./documentation/legal/)
 * [/prototype/](./prototype/) - Prototype source, built app and provider dataset
 * [/tools/](./tools/) - Data generator and build script
 
