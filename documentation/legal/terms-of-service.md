@@ -24,10 +24,10 @@ Payments are processed by our licensed payment partner, [Stripe Payments Europe 
 2. 72 hours pass after the booked slot without the Customer opening a dispute; or
 3. a dispute is resolved under section 7.
 
-The money is then released to the Provider in full. The Kodu service fee of 10 percent is shown to the Customer in the quote and paid by the Customer as part of the total.
+The money is then released to the Provider in full. Where the accepted quote includes a materials deposit, the materials amount is released to the Provider at payment so the parts can be bought. Extra work is only charged through a change order approved by the Customer in the app. The Kodu service fee of 10 percent is shown to the Customer in the quote and paid by the Customer as part of the total.
 
 ## 5. Cancellations
-A Customer may cancel a request at no cost before paying. After paying, a Customer may cancel free of charge until 24 hours before the booked slot. Cancelling later costs a late cancellation fee of €15, which goes to the Provider; the rest is refunded. If the Provider cancels, the Customer receives a full refund.
+A Customer may cancel a request at no cost before paying. After paying, the cancellation policy chosen by the Provider applies. It is shown on the Provider's profile and before payment: Flexible (free until 24 hours before the booked slot, then €15), Moderate (free until 48 hours before, then 25 percent of the job) or Strict (free until 72 hours before, then 50 percent of the job). The late cancellation fee goes to the Provider and the rest is refunded. If the Provider cancels, the Customer receives a full refund, including any materials deposit. Details are in the Payments, Cancellations and Refunds policy.
 
 ## 6. Your right of withdrawal as a consumer
 If you are a consumer, you have a legal right to withdraw from a service contract concluded online within 14 days. By booking a slot that falls inside those 14 days, you ask the Provider to start work before the withdrawal period ends. If you withdraw after work has started, you pay for the part already done. Once the work is fully performed, the right of withdrawal ends. This does not affect your rights if the work is faulty.

@@ -2,6 +2,15 @@
 
 This folder holds the interview notes, empathy map summaries and usability test logs behind the Kodu prototype. The prototype itself was built with Claude rather than Lovable.ai; its code lives in [/prototype/](../prototype/).
 
+## Documentation index
+| Folder | Contents |
+|---|---|
+| [legal/](./legal/) | Terms of Service, Privacy Notice, Provider Agreement, Cookie Policy, Legal Notice |
+| [trust-and-safety/](./trust-and-safety/) | Provider verification, community guidelines, payments and refunds, disputes, reviews |
+| [help-centre/](./help-centre/faq.md) | FAQ for expats and providers, also built into the prototype under Help centre |
+| [design-system/](./design-system/) | Tokens, type, components and accessibility, with a visual reference page |
+| [interviews/](./interviews/) and [tests/](./tests/) | Research and usability test logs |
+
 ## Research so far
 * Empathy maps for two personas: Sofia, an exchange student from Madrid renting in Kesklinn, and Mart, a Tallinn plumber who loses expat customers because of language and payment risk.
 * Competitor teardown of TaskRabbit, Yoojo and Facebook expat groups (see [/miro-boards/](../miro-boards/)).
