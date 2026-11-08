@@ -1436,11 +1436,11 @@ function panel(){let p=document.getElementById("pres");if(!p){p=document.createE
 function show(i){clearFx();idx=Math.max(0,Math.min(SC.length-1,i));const s=SC[idx];
   if(s.card){card(s.card)}else{nocard();if(s.role)use(s.role);if(s.set)s.set();save();history=[];err={};anim=true;dir="fwd";route=s.route;render();const sc=document.querySelector("#phone .screen");if(sc){sc.scrollTop=0;if(fxOn){sc.classList.remove("pz-enter");void sc.offsetWidth;sc.classList.add("pz-enter")}}window.scrollTo(0,0)}
   document.querySelectorAll(".toast").forEach(x=>x.remove());panel();
-  const tok=++autoTok,ts=Date.now(),need=(s.note||"").split(/\s+/).length*420;Promise.resolve(s.card?null:play(s.fx)).then(()=>{if(!auto||tok!==autoTok||!on)return;if(idx===SC.length-1){auto=false;panel();return}const wait=Math.max(s.card?3500:1200,ts+need-Date.now());setTimeout(()=>{if(auto&&tok===autoTok&&on)show(idx+1)},wait)})}
+  const tok=++autoTok,ts=Date.now(),need=(s.note||"").split(/\s+/).length*770;Promise.resolve(s.card?null:play(s.fx)).then(()=>{if(!auto||tok!==autoTok||!on)return;if(idx===SC.length-1){auto=false;panel();return}const wait=Math.max(s.card?3500:1200,ts+need-Date.now());setTimeout(()=>{if(auto&&tok===autoTok&&on)show(idx+1)},wait)})}
 function fmtT(){if(!t0)return "0:00";const x=Math.floor((Date.now()-t0)/1000);return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")}
 function toggleAuto(){auto=!auto;if(auto){show(idx)}else{autoTok++;panel()}}
 
-function start(mode){if(on)return;SC=mode==="full"?SC_FULL:SC_NEW;SP=mode==="full"?1:0.6;auto=false;t0=Date.now();clearInterval(clk);clk=setInterval(()=>{const c=document.querySelector("#pres .pz-clk");if(c)c.textContent=fmtT()},500);on=true;snap={};KEYS.forEach(k=>{try{snap[k]=localStorage.getItem(k)}catch(e){}});back={S,route};
+function start(mode){if(on)return;SC=mode==="full"?SC_FULL:SC_NEW;SP=mode==="full"?1:0.85;auto=false;t0=Date.now();clearInterval(clk);clk=setInterval(()=>{const c=document.querySelector("#pres .pz-clk");if(c)c.textContent=fmtT()},500);on=true;snap={};KEYS.forEach(k=>{try{snap[k]=localStorage.getItem(k)}catch(e){}});back={S,route};
   try{localStorage.setItem("kodu.cookie","no")}catch(e){}
   PS={guest:blank(),expat:mk("expat"),provider:mk("provider")};
   document.body.classList.add("presenting");notes=window.innerWidth>700;hidden=false;show(0)}
