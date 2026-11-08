@@ -1236,7 +1236,7 @@ details.hq p{margin:-4px 0 14px;font-size:14px;line-height:1.5;color:var(--body)
 /* Presentation mode: a scripted walkthrough with clean screens and speaker notes */
 (function(){
 const KEYS=["kodu.proto","kodu.proto.expat","kodu.proto.provider","kodu.cookie"];
-let on=false,idx=0,snap=null,back=null,PS=null,notes=true,hidden=false;
+let auto=false,t0=0,autoTok=0,clk=null;let on=false,idx=0,snap=null,back=null,PS=null,notes=true,hidden=false;
 
 function mk(role){const s=blank();s.role=role;Object.assign(s,JSON.parse(JSON.stringify(SAMPLE[role])));s.otpOk=true;s.loggedIn=true;if(role==="provider")s.verified=true;return s}
 function use(role){if(S!==PS[role]){S=PS[role]}}
@@ -1256,7 +1256,7 @@ function job(){use("expat");ensure();const p=pro();let j=S.jobs2.find(x=>x.id===
 let run=0,fxOn=true;
 const fxLayer=()=>{let l=document.getElementById("pfx");if(!l){l=document.createElement("div");l.id="pfx";l.innerHTML=`<div class="pz-spot"></div><div class="pz-call"></div><div class="pz-cur"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 2l15 11-6.5 1.2L16 21l-3 1.4-3.4-6.7L4 20z" fill="#16201D" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></div>`;document.body.appendChild(l)}return l};
 function clearFx(){run++;const l=document.getElementById("pfx");if(l)l.classList.remove("on","cur")}
-const zz=ms=>new Promise(r=>setTimeout(r,ms));
+const zz=ms=>new Promise(r=>setTimeout(r,ms));let SP=1;const zs=ms=>zz(ms*SP);
 function vis(el){const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&!el.closest("#pres,#pfx")}
 function fnd(b){const root=document.getElementById("phone");let list;
   if(b.sel)list=[...root.querySelectorAll(b.sel)].filter(vis);
@@ -1270,22 +1270,22 @@ function place(el,txt){const l=fxLayer(),sp=l.querySelector(".pz-spot"),cl=l.que
   cl.style.left=left+"px";cl.style.top=top+"px";cl.className="pz-call"+(below?" below":"");cl.style.setProperty("--ax",Math.max(16,Math.min(cl.offsetWidth-16,r.left+r.width/2-left))+"px");
   cl.classList.remove("pz-pop");void cl.offsetWidth;cl.classList.add("pz-pop");l.classList.add("on")}
 async function cursorTo(el,my){const l=fxLayer(),c=l.querySelector(".pz-cur");const r=el.getBoundingClientRect();l.classList.add("cur");
-  c.style.left=r.left+Math.min(r.width/2,60)+"px";c.style.top=r.top+r.height/2+"px";await zz(650);if(my!==run)return false;
-  c.classList.remove("tap");void c.offsetWidth;c.classList.add("tap");await zz(180);return my===run}
+  c.style.left=r.left+Math.min(r.width/2,60)+"px";c.style.top=r.top+r.height/2+"px";await zs(650);if(my!==run)return false;
+  c.classList.remove("tap");void c.offsetWidth;c.classList.add("tap");await zs(180);return my===run}
 async function countUp(el,my){const o=el.textContent;const m=o.match(/\d[\d,]*(\.\d+)?/);if(!m)return;const n=parseFloat(m[0].replace(/,/g,"")),d=(m[1]||"").length-(m[1]?1:0);const t0=performance.now();
-  while(true){if(my!==run){el.textContent=o;return}const k=Math.min(1,(performance.now()-t0)/900),e=1-Math.pow(1-k,3);el.textContent=o.replace(m[0],(n*e).toLocaleString("en-IE",{minimumFractionDigits:d,maximumFractionDigits:d}));if(k>=1)break;await zz(16)}el.textContent=o}
-async function play(fx){const my=++run;if(!fx||!fxOn)return;await zz(800);
+  while(true){if(my!==run){el.textContent=o;return}const k=Math.min(1,(performance.now()-t0)/(900*SP)),e=1-Math.pow(1-k,3);el.textContent=o.replace(m[0],(n*e).toLocaleString("en-IE",{minimumFractionDigits:d,maximumFractionDigits:d}));if(k>=1)break;await zz(16)}el.textContent=o}
+async function play(fx){const my=++run;if(!fx||!fxOn)return;await zs(800);
   for(const b of fx){if(my!==run)return;
     if(b.wait){await zz(b.wait);continue}
     const el=fnd(b);if(!el)continue;
     el.scrollIntoView({block:"center",behavior:"smooth"});{let last=null;for(let k=0;k<14;k++){await zz(70);const tp=el.getBoundingClientRect().top;if(last!==null&&Math.abs(tp-last)<0.5&&k>3)break;last=tp}}if(my!==run)return;
     place(el,b.c);
     if(b.count)countUp(el,my);
-    if(b.type){if(!await cursorTo(el,my))return;el.focus({preventScroll:true});el.value="";for(const ch of b.type){if(my!==run)return;el.value+=ch;el.dispatchEvent(new Event("input",{bubbles:true}));await zz(55)}
-      el.blur();await zz(500);if(b.send&&el.form){el.form.requestSubmit();await zz(500)}fxLayer().classList.remove("cur");continue}
-    if(b.click){if(!await cursorTo(el,my))return;await zz(150);el.click();await zz(900);fxLayer().classList.remove("cur");const el2=fnd(b);if(el2&&my===run)place(el2,b.c);await zz(900);continue}
-    await zz(1900)}
-  if(my!==run)return;await zz(400);if(my===run)fxLayer().classList.remove("on","cur")}
+    if(b.type){if(!await cursorTo(el,my))return;el.focus({preventScroll:true});el.value="";for(const ch of b.type){if(my!==run)return;el.value+=ch;el.dispatchEvent(new Event("input",{bubbles:true}));await zs(55)}
+      el.blur();await zs(500);if(b.send&&el.form){el.form.requestSubmit();await zs(500)}fxLayer().classList.remove("cur");continue}
+    if(b.click){if(!await cursorTo(el,my))return;await zs(150);el.click();await zs(900);fxLayer().classList.remove("cur");const el2=fnd(b);if(el2&&my===run)place(el2,b.c);await zs(900);continue}
+    await zs(1900)}
+  if(my!==run)return;await zs(400);if(my===run)fxLayer().classList.remove("on","cur")}
 addEventListener("resize",()=>{if(on)clearFx()});
 document.addEventListener("pointerdown",e=>{if(on&&!e.target.closest("#pres"))clearFx()},true);
 document.addEventListener("wheel",()=>{if(on)clearFx()},{passive:true});
@@ -1316,21 +1316,18 @@ const SC_FULL=[
 ];
 const byT=t=>SC_FULL.find(x=>x.title===t);
 const SC_NEW=[
- {card:"newopen",title:"Kodu",note:"Since the last version, Kodu has seven new features built from what real providers told us, plus a help centre. Fixed price services, materials deposits, change orders, cancellation policies, a profile score with a portfolio, review replies and business insights. We show each one from both sides of the marketplace."},
- {title:"A profile that answers questions",route:"profile",role:"expat",set:()=>{S.view=pro().id},fx:[{sel:".mrow",c:"Fixed price services, bookable instantly"},{sel:".pgrid",c:"Photos of his real work"},{t:"Reply from",up:".rreply",c:"The provider answers reviews"},{t:"Moderate cancellation",up:".card",c:"His cancellation rules, before she books"}],note:"This is what Sofia now sees on Mart's profile. A menu of fixed price jobs she can book instantly, photos of his recent work, his replies to reviews, and his cancellation policy. Everything she needs to decide is on one page."},
- byT("Small jobs in one tap"),
- {title:"An instant booking lands",route:"preq",role:"provider",set:()=>{pensure();let j=S.pjobs.find(x=>x.id==="pinst");if(!j){const m=S.menu[0];const e=EXPATS[5%EXPATS.length];j={id:"pinst",eid:e.id,title:m.name,desc:"Booked from your service menu at a fixed price.",photos:1,day:"Thu",slot:"11:00",date:16,status:"paid",fixed:m.price,instant:true,hours:m.mins/60,materials:0,matDesc:"none",ago:"just now",paidAt:"just now"};S.pjobs.unshift(j)}S.preqId=j.id;S.coOpen=false;S.finishing=false},fx:[{t:"Instant booking from your service menu",up:".note",c:"Booked and paid, no quote written"},{t:"Fixed price, service menu",up:".row",c:"His own fixed price"},{t:"Held in escrow for you",up:".row",c:"Still protected by escrow"}],note:"On Mart's side the booking simply arrives, already paid. He wrote no quote and had no back and forth. That makes small jobs worth taking."},
- {title:"Parts paid up front",route:"preq",role:"provider",set:()=>{pensure();const j=S.pjobs.find(x=>x.status==="new");j.deposit=false;j.materials=j.materials||pMat()[1];S.preqId=j.id;S.declining=false},fx:[{t:"Ask for materials as a deposit",up:"button",click:1,c:"One switch in the quote"},{t:"Paid to you at booking",up:".row",c:"Paid to him when the customer books"},{t:"You receive",up:".row",c:"Labour stays in escrow until the job is done"}],note:"Plumbers told us they hate paying for parts out of their own pocket. Now a quote can ask for the materials as a deposit. Mart receives that amount when the customer books, and the labour stays in escrow."},
- {title:"What the customer sees",route:"pay",role:"expat",set:()=>{const j=job();j.status="quoted";j.deposit=true;delete j.co},fx:[{t:"paid to Mart now",up:".row",c:"The deposit is clearly labelled"},{t:"materials deposit goes to",up:".note",c:"She knows exactly where her money goes"},{t:"Moderate cancellation",up:".note",c:"And his cancellation policy, before she pays"}],note:"Sofia sees the deposit before she pays: which part goes to Mart now, and which part waits in escrow. The cancellation policy is shown on the same screen."},
- byT("When the job grows"),
- {title:"Approving extra work",route:"job",role:"expat",set:()=>{const j=job();j.status="paid";j.paidAt="today";j.deposit=false;j.co={amt:35,reason:"The valve under the sink is corroded and needs replacing too, otherwise it will leak again.",status:"pending"}},fx:[{sel:".cocard",c:"Reason, photo and price, translated"},{t:"Approve",up:"button",click:1,c:"She approves in one tap"},{t:"Extra work, approved",up:".row",c:"Added to escrow, never paid in cash"}],note:"On Sofia's side the change order arrives translated, with the reason, a photo and the exact amount. She approves it in the app, and the extra joins the escrow. No cash and no argument at the door."},
- {title:"Profile strength",route:"pme",role:"provider",set:()=>{pensure();S.insurance=false;S.pphoto=false;S.portfolio=S.portfolio.slice(0,2);S.menuAdding=false},fx:[{sel:".scorev",count:1,c:"How complete his profile is"},{t:"Upload  +20%",up:"button",click:1,c:"Upload insurance, earn the Insured badge"},{sel:"[data-sv=portadd]",click:1,c:"Add a photo of his work"},{sel:".scorev",c:"Each step lifts his ranking in search"}],note:"Mart's profile now tells him exactly what is missing. Each item raises his score, and profiles above 80 percent get up to three times more requests. His work photos appear on his public profile."},
- {title:"Menu and cancellation rules",route:"pme",role:"provider",set:()=>{pensure();S.menuAdding=false;S.cpol="Moderate"},fx:[{t:"Service menu",up:".card",c:"His fixed price menu"},{sel:"[data-sv=mprice][data-arg='0:5']",click:1,c:"Change a price in one tap"},{t:"Cancellation policy",up:".card",c:"Three policies to choose from"},{t:"Strict",up:"button",click:1,c:"He decides how strict to be"}],note:"Here Mart manages his fixed price menu and chooses his cancellation policy: Flexible, Moderate or Strict. Customers see both on his profile before they book."},
- {title:"Protected from late cancellations",route:"preq",role:"provider",set:()=>{pensure();let j=S.pjobs.find(x=>x.lateFee);if(!j){j=S.pjobs.filter(x=>x.status==="paid"&&!x.instant).slice(-1)[0];j.status="cancelled";j.lateFee=cpolFeeFor(pq(j).net)}S.preqId=j.id},fx:[{t:"Late cancellation.",up:".note",c:"The customer cancelled six hours before"},{t:"You keep, late cancellation",up:".row",c:"He keeps the fee from his policy"}],note:"When a customer cancels late, the policy is applied automatically. Mart keeps the fee and it is paid out with his next payout."},
- byT("Answering reviews"),
- byT("Know your business"),
- {title:"Help when you need it",route:"help",role:"expat",set:()=>{S.helpTab="expat";S.helpPol="disputes"},fx:[{sel:"input[name=hq]",type:"refund",c:"Search 36 answers for both sides"},{sel:"details.hq",c:"Answers open right away"},{t:"Safety and policies",up:"button",click:1,c:"Five trust and safety policies"},{t:"Dispute resolution",up:".legaldoc",c:"Clear rules when something goes wrong"}],note:"Finally, the new help centre. Expats and providers each have their own answers, there is search, and the five trust and safety policies are one tap away: verification, community guidelines, payments, disputes and reviews."},
- {card:"newclose",title:"Kodu",note:"Seven features, all from real provider feedback, plus a help centre. Small jobs are faster, parts are paid up front, extra work is agreed in the app, and providers know how to grow. Thank you."}
+ {card:"newopen",title:"Kodu",note:"Kodu 2.0 adds seven features built from provider feedback, plus a help centre. Here is each one in action."},
+ {title:"A profile that answers questions",route:"profile",role:"expat",set:()=>{S.view=pro().id},fx:[{sel:".mrow",c:"Fixed price services, bookable instantly"},{sel:".pgrid",c:"Photos of his real work"},{t:"Moderate cancellation",up:".card",c:"His cancellation rules, before she books"}],note:"Sofia now sees Mart's fixed price menu, photos of his work, his review replies and his cancellation policy, all on one page."},
+ {title:"Small jobs in one tap",route:"slots",role:"expat",set:()=>{const p=pro();S.view=p.id;const it=pmenu(p)[0];const d=Object.keys(p.slots)[0];S.draft={title:it.name,desc:"Booked from the fixed price menu.",menu:0,price:it.price,mins:it.mins,day:d,slot:p.slots[d][0]}},fx:[{t:"Fixed price, instant booking",up:".card",c:"No quote needed: the price is fixed"},{t:"Book and pay",up:"button",click:1,c:"Straight to secure payment"}],note:"Small jobs no longer need a quote. She picks a time and pays, and the money still waits in escrow."},
+ {title:"Parts paid up front",route:"preq",role:"provider",set:()=>{pensure();const j=S.pjobs.find(x=>x.status==="new");j.deposit=false;j.materials=j.materials||pMat()[1];S.preqId=j.id;S.declining=false},fx:[{t:"Ask for materials as a deposit",up:"button",click:1,c:"One switch in the quote"},{t:"Paid to you at booking",up:".row",c:"Paid to him when the customer books"}],note:"Providers no longer pay for parts themselves. One switch asks for the materials as a deposit when the customer books."},
+ {title:"What the customer sees",route:"pay",role:"expat",set:()=>{const j=job();j.status="quoted";j.deposit=true;delete j.co},fx:[{t:"paid to Mart now",up:".row",c:"The deposit is clearly labelled"},{t:"Moderate cancellation",up:".note",c:"And the cancellation policy, before paying"}],note:"Sofia sees exactly which part goes to Mart now, and his cancellation policy, before she pays."},
+ {title:"When the job grows",route:"preq",role:"provider",set:()=>{pensure();const j=S.pjobs.find(x=>x.status==="paid"&&!x.instant)||S.pjobs[0];delete j.co;S.preqId=j.id;S.coOpen=true;S.coPhoto=false;S.coAmt="";S.coReason="";S.finishing=false},fx:[{sel:"input[name=coamt]",type:"35",c:"He found a corroded valve: extra €35"},{t:"Add photo",up:"button",click:1,c:"A photo shows the problem"},{t:"Send to",up:"button",click:1,c:"Sent translated for approval"},{wait:3300},{t:"Change order approved",up:".note",c:"Approved and added to escrow"}],note:"If the job is bigger than quoted, Mart sends a change order with a photo. No cash, no argument at the door."},
+ {title:"Approving extra work",route:"job",role:"expat",set:()=>{const j=job();j.status="paid";j.paidAt="today";j.deposit=false;j.co={amt:35,reason:"The valve under the sink is corroded and needs replacing too, otherwise it will leak again.",status:"pending"}},fx:[{sel:".cocard",c:"Reason, photo and price, translated"},{t:"Approve",up:"button",click:1,c:"She approves in one tap"}],note:"Sofia reads the request in Spanish and approves it in one tap. The extra amount joins the escrow."},
+ {title:"Profile strength and rules",route:"pme",role:"provider",set:()=>{pensure();S.insurance=false;S.pphoto=false;S.portfolio=S.portfolio.slice(0,2);S.menuAdding=false;S.cpol="Moderate"},fx:[{sel:".scorev",count:1,c:"How complete his profile is"},{t:"Upload  +20%",up:"button",click:1,c:"Each step lifts his ranking"},{t:"Cancellation policy",up:".card",c:"He picks Flexible, Moderate or Strict"}],note:"Mart's profile score shows what is missing, and each step lifts his ranking. He also sets his menu prices and his cancellation policy here."},
+ {title:"Answering reviews",route:"previews",role:"provider",set:()=>{pensure();S.replyOpen=null;delete S.revReplies[1]},fx:[{t:"Reply publicly",up:"button",click:1,c:"Reply to any review"},{t:"Sorry about the delay",up:"button",click:1,c:"Start from a ready reply"},{t:"Post reply",up:"button",click:1,c:"Translated for every reader"}],note:"Providers can now reply to reviews in their own language, and rate customers privately."},
+ {title:"Know your business",route:"pinsights",role:"provider",set:()=>{pensure()},fx:[{t:"Quotes accepted",up:".kpi",c:"How many quotes become jobs"},{t:"Where the demand is",up:".card",c:"Demand by district"},{t:"Your price against the area",up:".card",c:"His rate against Tallinn"}],note:"Insights show his quote acceptance, where demand is, how his price compares, and what to do next."},
+ {title:"Help when you need it",route:"help",role:"expat",set:()=>{S.helpTab="expat";S.helpPol="disputes"},fx:[{sel:"input[name=hq]",type:"refund",c:"Search 36 answers"},{t:"Safety and policies",up:"button",click:1,c:"Five trust and safety policies"}],note:"And a help centre for both sides, with search and five trust and safety policies."},
+ {card:"newclose",title:"Kodu",note:"Faster small jobs, parts paid up front, extra work agreed in the app, and clear rules for both sides. Thank you."}
 ];
 let SC=SC_NEW;
 
@@ -1342,11 +1339,12 @@ body.presenting .devbar,body.presenting .rolesw,body.presenting .demo,body.prese
 #pres .pz-pr{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 18px}
 #pres .pz-pn{font-size:12px;font-weight:700;color:#BFE3D6;white-space:nowrap;font-variant-numeric:tabular-nums}
 #pres .pz-pt{flex:1;min-width:0;font-family:Sora,sans-serif;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pres button{height:34px;min-width:34px;padding:0 12px;border-radius:17px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+#pres button{white-space:nowrap;flex-shrink:0;height:34px;min-width:34px;padding:0 12px;border-radius:17px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 #pres button.pz-nx{background:#BFE3D6;color:#16201D;border-color:#BFE3D6}
 #pres button:hover{border-color:#fff}
 #pres .pz-note{padding:0 18px 14px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.86)}
 #pres .pz-prog{height:3px;background:rgba(255,255,255,.12);border-radius:0 0 22px 22px;overflow:hidden}#pres .pz-prog span{display:block;height:100%;background:#BFE3D6;transition:width .3s}
+#pres .pz-clk{font-size:12px;font-weight:700;color:rgba(255,255,255,.6);font-variant-numeric:tabular-nums;min-width:30px}#pres button.pz-on{background:#fff;color:#16201D;border-color:#fff}
 #pres .pz-keys{font-size:11px;color:rgba(255,255,255,.5);padding:0 18px 10px}
 #pcard{position:fixed;inset:0;overflow:hidden;z-index:9990;background:#F6F2EA;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
 #pcard .pz-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:22px;max-width:760px;animation:pcIn .5s ease both}
@@ -1355,7 +1353,7 @@ body.presenting .devbar,body.presenting .rolesw,body.presenting .demo,body.prese
 #pcard .pz-tags{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}#pcard .pz-tags span{padding:8px 14px;border-radius:18px;background:#fff;border:1px solid #E4DED3;font-size:14px;font-weight:700;color:#16201D}
 #pcard .pz-by{font-size:13px;color:#8A918D;margin-top:8px}
 @keyframes pcIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@media (max-width:600px){#pres .pz-keys{display:none}#pres .pz-pt{font-size:14px}#pres .pz-note{font-size:13px}}
+@media (max-width:600px){#pres .pz-keys{display:none}#pres .pz-pt,#pres .pz-lbl,#pres [data-pres=replay]{display:none}#pres .pz-pr{gap:6px;padding:8px 8px 8px 14px;justify-content:space-between}#pres button{padding:0 10px}#pres .pz-pt{font-size:14px}#pres .pz-note{font-size:13px}}
 
 #pfx{position:fixed;inset:0;z-index:9980;pointer-events:none}
 #pfx .pz-spot{position:fixed;border-radius:16px;box-shadow:0 0 0 200vmax rgba(22,32,29,.42),0 0 0 3px #BFE3D6,0 0 26px 6px rgba(191,227,214,.75);opacity:0;transition:left .5s cubic-bezier(.2,.8,.2,1),top .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1),height .5s cubic-bezier(.2,.8,.2,1),opacity .35s}
@@ -1433,29 +1431,33 @@ function nocard(){const c=document.getElementById("pcard");if(c)c.remove()}
 
 function panel(){let p=document.getElementById("pres");if(!p){p=document.createElement("div");p.id="pres";document.body.appendChild(p)}
   const s=SC[idx];p.className=hidden?"pz-hid":"";
-  p.innerHTML=`<div class="pz-pr"><span class="pz-pn">${idx+1} / ${SC.length}</span><span class="pz-pt">${s.card?(/open/.test(s.card)?"Opening":"Closing"):s.title}</span><button data-pres="notes" title="Speaker notes (N)">${notes?"Hide notes":"Notes"}</button>${s.fx?`<button data-pres="replay" title="Replay animation (R)">↻</button>`:""}<button data-pres="prev" aria-label="Previous" ${idx?"":"disabled style=opacity:.4"}>‹</button><button class="pz-nx" data-pres="next" aria-label="Next">${idx===SC.length-1?"Finish":"Next ›"}</button><button data-pres="exit" aria-label="Exit presentation" title="Exit (Esc)">✕</button></div>${notes?`<div class="pz-note">${s.note}</div><div class="pz-keys">Arrow keys or space to move · R replay · A animations on or off · N notes · H hide this bar · P phone frame · F full screen · Esc exit</div>`:""}<div class="pz-prog"><span style="width:${(idx+1)/SC.length*100}%"></span></div>`}
+  p.innerHTML=`<div class="pz-pr"><span class="pz-pn">${idx+1} / ${SC.length}</span><span class="pz-pt">${s.card?(/open/.test(s.card)?"Opening":"Closing"):s.title}</span><span class="pz-clk">${fmtT()}</span><button data-pres="auto" title="Auto play (G)" ${auto?'class="pz-on"':""}>${auto?"❚❚":"▶"}<span class="pz-lbl"> Auto</span></button><button data-pres="notes" title="Speaker notes (N)">${notes?"Hide notes":"Notes"}</button>${s.fx?`<button data-pres="replay" title="Replay animation (R)">↻</button>`:""}<button data-pres="prev" aria-label="Previous" ${idx?"":"disabled style=opacity:.4"}>‹</button><button class="pz-nx" data-pres="next" aria-label="Next">${idx===SC.length-1?"Finish":"Next ›"}</button><button data-pres="exit" aria-label="Exit presentation" title="Exit (Esc)">✕</button></div>${notes?`<div class="pz-note">${s.note}</div><div class="pz-keys">Arrow keys or space to move · R replay · A animations on or off · G auto play · N notes · H hide this bar · P phone frame · F full screen · Esc exit</div>`:""}<div class="pz-prog"><span style="width:${(idx+1)/SC.length*100}%"></span></div>`}
 
 function show(i){clearFx();idx=Math.max(0,Math.min(SC.length-1,i));const s=SC[idx];
-  if(s.card){card(s.card)}else{nocard();if(s.role)use(s.role);if(s.set)s.set();save();history=[];err={};anim=true;dir="fwd";route=s.route;render();const sc=document.querySelector("#phone .screen");if(sc){sc.scrollTop=0;if(fxOn){sc.classList.remove("pz-enter");void sc.offsetWidth;sc.classList.add("pz-enter")}}window.scrollTo(0,0);play(s.fx)}
-  document.querySelectorAll(".toast").forEach(x=>x.remove());panel()}
+  if(s.card){card(s.card)}else{nocard();if(s.role)use(s.role);if(s.set)s.set();save();history=[];err={};anim=true;dir="fwd";route=s.route;render();const sc=document.querySelector("#phone .screen");if(sc){sc.scrollTop=0;if(fxOn){sc.classList.remove("pz-enter");void sc.offsetWidth;sc.classList.add("pz-enter")}}window.scrollTo(0,0)}
+  document.querySelectorAll(".toast").forEach(x=>x.remove());panel();
+  const tok=++autoTok,ts=Date.now(),need=(s.note||"").split(/\s+/).length*420;Promise.resolve(s.card?null:play(s.fx)).then(()=>{if(!auto||tok!==autoTok||!on)return;if(idx===SC.length-1){auto=false;panel();return}const wait=Math.max(s.card?3500:1200,ts+need-Date.now());setTimeout(()=>{if(auto&&tok===autoTok&&on)show(idx+1)},wait)})}
+function fmtT(){if(!t0)return "0:00";const x=Math.floor((Date.now()-t0)/1000);return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")}
+function toggleAuto(){auto=!auto;if(auto){show(idx)}else{autoTok++;panel()}}
 
-function start(mode){if(on)return;SC=mode==="full"?SC_FULL:SC_NEW;on=true;snap={};KEYS.forEach(k=>{try{snap[k]=localStorage.getItem(k)}catch(e){}});back={S,route};
+function start(mode){if(on)return;SC=mode==="full"?SC_FULL:SC_NEW;SP=mode==="full"?1:0.6;auto=false;t0=Date.now();clearInterval(clk);clk=setInterval(()=>{const c=document.querySelector("#pres .pz-clk");if(c)c.textContent=fmtT()},500);on=true;snap={};KEYS.forEach(k=>{try{snap[k]=localStorage.getItem(k)}catch(e){}});back={S,route};
   try{localStorage.setItem("kodu.cookie","no")}catch(e){}
   PS={guest:blank(),expat:mk("expat"),provider:mk("provider")};
   document.body.classList.add("presenting");notes=window.innerWidth>700;hidden=false;show(0)}
-function stop(){if(!on)return;clearFx();on=false;nocard();const p=document.getElementById("pres");if(p)p.remove();document.body.classList.remove("presenting");
+function stop(){if(!on)return;clearFx();on=false;auto=false;autoTok++;clearInterval(clk);nocard();const p=document.getElementById("pres");if(p)p.remove();document.body.classList.remove("presenting");
   KEYS.forEach(k=>{try{if(snap[k]==null)localStorage.removeItem(k);else localStorage.setItem(k,snap[k])}catch(e){}});
   S=back.S;history=[];route=back.route;render();toast("Presentation ended")}
 window.koduPresent=start;
 
 document.addEventListener("click",e=>{const t=e.target.closest("[data-pres]");if(!t)return;e.stopPropagation();const a=t.dataset.pres;
-  if(a==="start")start(t.dataset.mode||"new");else if(a==="next"){idx===SC.length-1?stop():show(idx+1)}else if(a==="prev")show(idx-1);else if(a==="exit")stop();else if(a==="notes"){notes=!notes;panel()}else if(a==="replay"){fxOn=true;play(SC[idx].fx)}},true);
+  if(a==="start")start(t.dataset.mode||"new");else if(a==="next"){idx===SC.length-1?stop():show(idx+1)}else if(a==="prev")show(idx-1);else if(a==="exit")stop();else if(a==="notes"){notes=!notes;panel()}else if(a==="auto"){toggleAuto()}else if(a==="replay"){fxOn=true;play(SC[idx].fx)}},true);
 
 document.addEventListener("keydown",e=>{if(!on)return;const tag=(e.target.tagName||"").toLowerCase();if(tag==="input"||tag==="textarea")return;const k=e.key;
   if(k==="ArrowRight"||k==="PageDown"||k===" "){e.preventDefault();idx===SC.length-1?stop():show(idx+1)}
   else if(k==="ArrowLeft"||k==="PageUp"){e.preventDefault();show(idx-1)}
   else if(k==="Escape"){if(document.fullscreenElement)return;stop()}
   else if(k==="n"||k==="N"){notes=!notes;panel()}
+  else if(k==="g"||k==="G"){toggleAuto()}
   else if(k==="r"||k==="R"){fxOn=true;play(SC[idx].fx)}
   else if(k==="a"||k==="A"){fxOn=!fxOn;if(!fxOn)clearFx();toast(fxOn?"Animations on":"Animations off")}
   else if(k==="h"||k==="H"){hidden=!hidden;panel()}
