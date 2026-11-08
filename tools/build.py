@@ -2,10 +2,11 @@
 from pathlib import Path
 root=Path(__file__).resolve().parent.parent/"prototype"
 shell=(root/"src"/"shell.html").read_text()
+svc=(root/"src"/"svc.js").read_text()
 expat=(root/"src"/"expat.js").read_text()
 prov=(root/"src"/"provider.js").read_text()
 legal=(root/"src"/"legal.js").read_text()
 present=(root/"src"/"present.js").read_text()
-out=shell.replace("</script>\n</body>","</script>\n<script>\n"+expat+"\n</script>\n<script>\n"+prov+"\n</script>\n<script>\n"+legal+"\n</script>\n<script>\n"+present+"\n</script>\n</body>")
+out=shell.replace("</script>\n</body>","</script>\n<script>\n"+svc+"\n</script>\n<script>\n"+expat+"\n</script>\n<script>\n"+prov+"\n</script>\n<script>\n"+legal+"\n</script>\n<script>\n"+present+"\n</script>\n</body>")
 (root/"index.html").write_text(out)
 print("built prototype/index.html",len(out),"bytes")
